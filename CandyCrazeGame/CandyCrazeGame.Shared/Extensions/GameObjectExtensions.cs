@@ -43,7 +43,7 @@ namespace CandyCrazeGame
               width: gameObject.Width,
               height: gameObject.Height);
 
-            gameObject.SetHitBoxBorder(rect);
+            //gameObject.SetHitBoxBorder(rect);
 
             return rect;
         }
@@ -54,7 +54,20 @@ namespace CandyCrazeGame
               x: gameObject.GetLeft() + gameObject.Width / 4,
               y: gameObject.GetTop() + gameObject.Height / 2,
               width: gameObject.Width - gameObject.Width / 4,
-              height: gameObject.Height - ((gameObject.Height / 2) + 10));
+              height: gameObject.Height - gameObject.Height / 2);
+
+            gameObject.SetHitBoxBorder(rect);
+
+            return rect;
+        }
+
+        public static Rect GetStandingHitBox(this GameObject gameObject)
+        {
+            var rect = new Rect(
+              x: gameObject.GetLeft() + gameObject.Width / 4,
+              y: gameObject.GetTop() + gameObject.Height / 2,
+              width: gameObject.Width - gameObject.Width / 4,
+              height: gameObject.Height - gameObject.Height / 4);
 
             gameObject.SetHitBoxBorder(rect);
 
