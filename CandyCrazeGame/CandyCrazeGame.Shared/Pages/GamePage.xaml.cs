@@ -67,6 +67,8 @@ namespace CandyCrazeGame
         private double _jumpEaseDurationCounter;
         private readonly double _jumpEaseDurationCounterDefault = 10;
 
+        private double _fallingEaseDurationCounter = 0;
+
         private GameObject _landedCloud;
 
         #endregion
@@ -199,31 +201,18 @@ namespace CandyCrazeGame
 
         private void PopulateGameView()
         {
+            for (int i = 0; i < 5; i++)
+            {
+                SpawnCloud();
+            }
+
+            _landedCloud = GameView.Children.OfType<Cloud>().First();
+
             // add some collectibles
             for (int i = 0; i < 10; i++)
             {
                 SpawnCollectible();
             }
-
-            for (int i = 0; i < 5; i++)
-            {
-                Cloud cloud = new(_scale);
-
-                cloud.Speed = _gameSpeed + _random.Next(1, 3);
-
-                _markNum = _random.Next(0, _clouds.Length);
-                cloud.SetContent(_clouds[_markNum]);
-
-                cloud.SetPosition(
-                  left: (GameView.Width / 2 - cloud.Width / 2) * _random.Next(-1, 3),
-                  top: (GameView.Height / 3 - cloud.Height / 2) * _random.Next(-1, 3));
-
-                cloud.SetZ(0);
-
-                GameView.Children.Add(cloud);
-            }
-
-            _landedCloud = GameView.Children.OfType<Cloud>().First();
 
             // add player
             _player = new Player(_scale);
@@ -271,7 +260,6 @@ namespace CandyCrazeGame
             _jumpEaseDurationCounter = _jumpEaseDurationCounterDefault;
 
             _cloudSpawnCounter = _cloudSpawnCounterDefault;
-            _cloudCount = 0;
 
             foreach (GameObject x in GameView.GetGameObjects<PowerUp>())
             {
@@ -462,8 +450,6 @@ namespace CandyCrazeGame
 
         #region Player
 
-        private double _fallingEaseDurationCounter = 0;
-
         private void UpdatePlayer()
         {
             switch (_player.PlayerState)
@@ -472,14 +458,17 @@ namespace CandyCrazeGame
                     {
                         _player.SetTop(_player.GetTop() + _landedCloud.Speed);
 
-                        _fallingEaseDurationCounter = 0;
-                        _idleDurationCounter--;
-
-                        if (_idleDurationCounter <= 0)
+                        if (_playerHitBox.Top > _windowHeight / 4)
                         {
-                            SoundHelper.PlaySound(SoundType.JUMP);
-                            _player.SetState(PlayerState.Jumping);
-                            _idleDurationCounter = _idleDurationCounterDefault;
+                            _fallingEaseDurationCounter = 0;
+                            _idleDurationCounter--;
+
+                            if (_idleDurationCounter <= 0)
+                            {
+                                SoundHelper.PlaySound(SoundType.JUMP);
+                                _player.SetState(PlayerState.Jumping);
+                                _idleDurationCounter = _idleDurationCounterDefault;
+                            }
                         }
 
                     }
@@ -576,6 +565,7 @@ namespace CandyCrazeGame
 
             var cloudHitBox = cloud.GetPlatformHitBox();
 
+            // only land on a cloud if it's almost in the middle
             if (_playerHitBox.Top > _windowHeight / 3)
             {
                 if (_player.PlayerState == PlayerState.Falling && _playerHitBox.IntersectsWith(cloudHitBox))
