@@ -206,7 +206,6 @@ namespace CandyCrazeGame
                 top: GameView.Height / 2 - _player.Height / 2);
 
             _player.SetZ(1);
-
             GameView.Children.Add(_player);
 
             _playerHitBox = _player.GetHitBox();
@@ -250,6 +249,7 @@ namespace CandyCrazeGame
                 GameView.AddDestroyableGameObject(x);
             }
 
+            RecycleGameObjects();
             RemoveGameObjects();
             StartGameSounds();
 
