@@ -138,8 +138,9 @@ namespace CandyCrazeGame
     public enum ElementType
     {
         NONE,
-        PLAYER,
-        PLAYER_TRAIL,
+        PLAYER_IDLE,
+        PLAYER_JUMP,
+        PLAYER_FALL,
         POWERUP,
         HEALTH,
         COLLECTIBLE,

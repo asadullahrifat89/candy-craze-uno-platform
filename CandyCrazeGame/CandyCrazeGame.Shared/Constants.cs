@@ -26,18 +26,9 @@ namespace CandyCrazeGame
 
         public static KeyValuePair<ElementType, Uri>[] ELEMENT_TEMPLATES = new KeyValuePair<ElementType, Uri>[]
         {
-            new KeyValuePair<ElementType, Uri>(ElementType.PLAYER, new Uri("ms-appx:///Assets/Images/player1.png")),
-            new KeyValuePair<ElementType, Uri>(ElementType.PLAYER, new Uri("ms-appx:///Assets/Images/player2.png")),
-            new KeyValuePair<ElementType, Uri>(ElementType.PLAYER, new Uri("ms-appx:///Assets/Images/player3.png")),
-            new KeyValuePair<ElementType, Uri>(ElementType.PLAYER, new Uri("ms-appx:///Assets/Images/player4.png")),
-            new KeyValuePair<ElementType, Uri>(ElementType.PLAYER, new Uri("ms-appx:///Assets/Images/player5.png")),
-            new KeyValuePair<ElementType, Uri>(ElementType.PLAYER, new Uri("ms-appx:///Assets/Images/player6.png")),
-            new KeyValuePair<ElementType, Uri>(ElementType.PLAYER, new Uri("ms-appx:///Assets/Images/player7.png")),
-            new KeyValuePair<ElementType, Uri>(ElementType.PLAYER, new Uri("ms-appx:///Assets/Images/player8.png")),
-            new KeyValuePair<ElementType, Uri>(ElementType.PLAYER, new Uri("ms-appx:///Assets/Images/player9.png")),
-            new KeyValuePair<ElementType, Uri>(ElementType.PLAYER, new Uri("ms-appx:///Assets/Images/player10.png")),
-            new KeyValuePair<ElementType, Uri>(ElementType.PLAYER, new Uri("ms-appx:///Assets/Images/player11.png")),
-            new KeyValuePair<ElementType, Uri>(ElementType.PLAYER, new Uri("ms-appx:///Assets/Images/player12.png")),
+            new KeyValuePair<ElementType, Uri>(ElementType.PLAYER_IDLE, new Uri("ms-appx:///Assets/Images/player_idle.png")),
+            new KeyValuePair<ElementType, Uri>(ElementType.PLAYER_JUMP, new Uri("ms-appx:///Assets/Images/player_jump.png")),
+            new KeyValuePair<ElementType, Uri>(ElementType.PLAYER_FALL, new Uri("ms-appx:///Assets/Images/player_fall.png")),
 
             new KeyValuePair<ElementType, Uri>(ElementType.POWERUP, new Uri("ms-appx:///Assets/Images/powerup1.png")),
 
@@ -118,14 +109,5 @@ namespace CandyCrazeGame
         public const string COOKIE_ACCEPTED_KEY = "Accepted";
 
         #endregion
-    }
-
-    public enum MovementDirection
-    {
-        None,
-        Right,
-        Left,
-        Up,
-        Down
     }
 }

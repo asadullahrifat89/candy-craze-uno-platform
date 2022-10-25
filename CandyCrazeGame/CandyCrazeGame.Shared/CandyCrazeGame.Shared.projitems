@@ -81,6 +81,10 @@
 		 explicitly included in the projitem, so files can be added from vscode
 		 without manipulating the projitem file.
 	-->
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Images\logo_game.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Images\player_idle.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Images\player_jump.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Images\player_fall.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Images\collectible1.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Images\collectible2.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Images\collectible3.png" />
