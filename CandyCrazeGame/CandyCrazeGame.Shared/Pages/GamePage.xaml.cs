@@ -24,9 +24,9 @@ namespace CandyCrazeGame
         private readonly double _gameSpeedDefault = 5;
 
         private int _cloudCount;
-        private readonly int _cloudSpawnLimit = 15;
-        private int _cloudSpawnCounter;
-        private readonly int _cloudSpawnCounterDefault = 20;
+        private readonly int _cloudSpawnLimit = 12;
+        private double _cloudSpawnCounter;
+        private double _cloudSpawnCounterDefault = 40;
         private readonly int _cloudMovementDirectionXSpeedFactor = 5;
         private readonly double _cloudSpeedFactor = 0.9;
 
@@ -212,7 +212,14 @@ namespace CandyCrazeGame
 
         private void PopulateGameView()
         {
-            SpawnCloud();
+            for (int i = 0; i < _cloudSpawnLimit; i++)
+            {
+                SpawnCloud();
+
+                var cloud = GameView.Children.OfType<Cloud>().Last();
+
+                RandomizeCloudPosition(cloud, i * -1);
+            }
 
             _landedCloud = GameView.Children.OfType<Cloud>().First();
 
@@ -268,6 +275,7 @@ namespace CandyCrazeGame
             _idleDurationCounter = _idleDurationCounterDefault;
             _jumpingEaseDurationCounter = _jumpEaseDurationCounterDefault;
 
+            _cloudSpawnCounterDefault = 40;
             _cloudSpawnCounter = _cloudSpawnCounterDefault;
 
             foreach (GameObject x in GameView.GetGameObjects<PowerUp>())
@@ -318,68 +326,6 @@ namespace CandyCrazeGame
 #endif
         }
 
-        private void SpawnGameObjects()
-        {
-            if (_powerUpCount < _powerUpSpawnLimit)
-            {
-                _powerUpSpawnCounter--;
-
-                if (_powerUpSpawnCounter < 1)
-                {
-                    SpawnPowerUp();
-                    _powerUpSpawnCounter = _random.Next(600, 1000);
-                }
-            }
-
-            if (_cloudCount < _cloudSpawnLimit)
-            {
-                _cloudSpawnCounter--;
-
-                if (_cloudSpawnCounter < 1)
-                {
-                    SpawnCloud();
-                    _cloudSpawnCounter = _cloudSpawnCounterDefault;
-                }
-            }
-        }
-
-        private void UpdateGameObjects()
-        {
-            foreach (GameObject x in GameView.Children.OfType<GameObject>())
-            {
-                switch ((ElementType)x.Tag)
-                {
-                    case ElementType.CLOUD:
-                        {
-                            UpdateCloud(x);
-                        }
-                        break;
-                    case ElementType.COLLECTIBLE:
-                        {
-                            UpdateCollectible(x);
-                        }
-                        break;
-                    case ElementType.POWERUP:
-                        {
-                            UpdatePowerUp(x);
-                        }
-                        break;
-                    case ElementType.PLAYER:
-                        {
-                            UpdatePlayer();
-                        }
-                        break;
-                    default:
-                        break;
-                }
-            }
-        }
-
-        private void RemoveGameObjects()
-        {
-            GameView.RemoveDestroyableGameObjects();
-        }
-
         private void ResetControls()
         {
             _pointerPosition = null;
@@ -427,11 +373,74 @@ namespace CandyCrazeGame
 
             //TODO: go to game over page
             //NavigateToPage(typeof(GameOverPage));
+            NavigateToPage(typeof(StartPage));
         }
 
         #endregion
 
         #region GameObject
+
+        private void SpawnGameObjects()
+        {
+            if (_powerUpCount < _powerUpSpawnLimit)
+            {
+                _powerUpSpawnCounter--;
+
+                if (_powerUpSpawnCounter < 1)
+                {
+                    SpawnPowerUp();
+                    _powerUpSpawnCounter = _random.Next(600, 1000);
+                }
+            }
+
+            //if (_cloudCount < _cloudSpawnLimit)
+            //{
+            //    _cloudSpawnCounter--;
+
+            //    if (_cloudSpawnCounter < 1)
+            //    {
+            //        SpawnCloud();
+            //        _cloudSpawnCounter = _cloudSpawnCounterDefault;
+            //    }
+            //}
+        }
+
+        private void UpdateGameObjects()
+        {
+            foreach (GameObject x in GameView.Children.OfType<GameObject>())
+            {
+                switch ((ElementType)x.Tag)
+                {
+                    case ElementType.CLOUD:
+                        {
+                            UpdateCloud(x);
+                        }
+                        break;
+                    case ElementType.COLLECTIBLE:
+                        {
+                            UpdateCollectible(x);
+                        }
+                        break;
+                    case ElementType.POWERUP:
+                        {
+                            UpdatePowerUp(x);
+                        }
+                        break;
+                    case ElementType.PLAYER:
+                        {
+                            UpdatePlayer();
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+
+        private void RemoveGameObjects()
+        {
+            GameView.RemoveDestroyableGameObjects();
+        }
 
         private void RecycleGameObjects()
         {
@@ -697,6 +706,7 @@ namespace CandyCrazeGame
             }
 
             if (cloud.GetTop() > GameView.Height)
+                //GameView.AddDestroyableGameObject(cloud);
                 RecyleCloud(cloud);
         }
 
@@ -710,11 +720,11 @@ namespace CandyCrazeGame
             RandomizeCloudPosition(cloud);
         }
 
-        private void RandomizeCloudPosition(GameObject cloud)
+        private void RandomizeCloudPosition(GameObject cloud, int distance = -1)
         {
             cloud.SetPosition(
                 left: _random.Next((int)(50 * _scale), (int)(GameView.Width - (50 * _scale))),
-                top: (int)GameView.Height / 2 * -1);
+                top: (int)GameView.Height / 2 * distance);
         }
 
         #endregion
@@ -941,6 +951,7 @@ namespace CandyCrazeGame
             if (_score > _scoreCap)
             {
                 _gameSpeed = _gameSpeedDefault + 0.2 * _difficultyMultiplier;
+                _cloudSpawnCounterDefault -= 0.5;
 
                 _difficultyMultiplier++;
                 _scoreCap += 50;
