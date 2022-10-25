@@ -212,14 +212,7 @@ namespace CandyCrazeGame
 
         private void PopulateGameView()
         {
-            //for (int i = 0; i < _cloudSpawnLimit; i++)
-            //{
             SpawnCloud();
-
-            //    var cloud = GameView.Children.OfType<Cloud>().Last();
-
-            //    RandomizeCloudPosition(cloud, i * -1);
-            //}
 
             _landedCloud = GameView.Children.OfType<Cloud>().First();
 
@@ -700,7 +693,6 @@ namespace CandyCrazeGame
             {
                 GameView.AddDestroyableGameObject(cloud);
                 _cloudCount--;
-                //RecyleCloud(cloud as Cloud);
             }
         }
 
@@ -850,12 +842,7 @@ namespace CandyCrazeGame
             if (_powerUpType == PowerUpType.Rocket)
             {
                 _player.SetState(PlayerState.Flying);
-
                 _player.SetScaleTransform(2);
-
-                //_player.SetSize(
-                //  width: 256 * _scale,
-                //  height: 256 * _scale);
 
                 SoundHelper.PlaySound(SoundType.SPACESHIP_FLIGHT);
             }
@@ -885,9 +872,6 @@ namespace CandyCrazeGame
             // if was in rocket mode set to falling mode
             if (_powerUpType == PowerUpType.Rocket)
             {
-                //_player.SetSize(
-                //   width: Constants.PLAYER_WIDTH * _scale,
-                //   height: Constants.PLAYER_HEIGHT * _scale);
                 _player.SetScaleTransform(1);
                 _player.SetState(PlayerState.Falling);
                 SoundHelper.StopSound(SoundType.SPACESHIP_FLIGHT);
