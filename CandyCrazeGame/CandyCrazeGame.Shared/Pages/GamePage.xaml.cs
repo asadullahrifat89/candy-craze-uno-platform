@@ -53,13 +53,13 @@ namespace CandyCrazeGame
 
         private double _playerHealth;
 
-        private int _jumpDurationCounter = 20;
-        private readonly int _jumpDurationCounterDefault = 20;
+        private int _jumpDurationCounter;
+        private readonly int _jumpDurationCounterDefault = 30;
 
-        private int _idleDurationCounter = 20;
+        private int _idleDurationCounter;
         private readonly int _idleDurationCounterDefault = 20;
 
-        private double _jumpEaseDurationCounter = 10;
+        private double _jumpEaseDurationCounter;
         private readonly double _jumpEaseDurationCounterDefault = 10;
 
         #endregion
