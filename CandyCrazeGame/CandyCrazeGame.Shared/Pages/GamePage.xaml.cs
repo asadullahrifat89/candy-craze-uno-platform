@@ -27,7 +27,7 @@ namespace CandyCrazeGame
         private readonly int _cloudSpawnLimit = 15;
         private double _cloudSpawnCounter;
         private double _cloudSpawnCounterDefault = 40;
-        private readonly int _cloudMovementDirectionXSpeedFactor = 5;
+        private readonly int _cloudMovementDirectionXSpeedDivider = 8;
         private readonly double _cloudSpeedFactor = 0.9;
 
         private int _powerUpCount;
@@ -64,6 +64,7 @@ namespace CandyCrazeGame
         private int _damageRecoveryOpacityFrameSkip;
         private int _damageRecoveryCounter = 100;
         private readonly int _damageRecoveryDelay = 400;
+        private int _playerHealthLossPoints;
 
         private bool _isRecoveringFromDamage;
 
@@ -253,7 +254,7 @@ namespace CandyCrazeGame
             _powerUpCount = 0;
 
             _score = 0;
-            _scoreCap = 20;
+            _scoreCap = 30;
             _difficultyMultiplier = 1;
 
             _collectibleCollected = 0;
@@ -262,6 +263,7 @@ namespace CandyCrazeGame
             PlayerHealthBarPanel.Visibility = Visibility.Visible;
 
             _playerHealth = 100;
+            _playerHealthLossPoints = 20;
 
             _jumpDurationCounterDefault = _airborneDuration * _scale;
             _jumpDurationCounter = _jumpDurationCounterDefault;
@@ -525,7 +527,7 @@ namespace CandyCrazeGame
                                     _player.SetLeft(_player.GetLeft() - _landedCloud.Speed / (_cloudMovementDirectionXSpeedDivider * _scale));
                                     break;
                                 case MovementDirectionX.Right:
-                                    _player.SetLeft(_player.GetLeft() + _landedCloud.Speed / _cloudMovementDirectionXSpeedFactor);
+                                    _player.SetLeft(_player.GetLeft() + _landedCloud.Speed / (_cloudMovementDirectionXSpeedDivider * _scale));
                                     break;
                                 default:
                                     break;
@@ -581,7 +583,7 @@ namespace CandyCrazeGame
                             if (_playerHitBox.Top > _windowHeight)
                             {
                                 //TODO: loose health
-                                LooseHealth(20);
+                                LooseHealth(_playerHealthLossPoints);
 
                                 //TODO: animate health loss
 
@@ -667,10 +669,10 @@ namespace CandyCrazeGame
             switch (inCloud.MovementDirectionX)
             {
                 case MovementDirectionX.Left:
-                    cloud.SetLeft(cloud.GetLeft() - cloud.Speed / _cloudMovementDirectionXSpeedFactor);
+                    cloud.SetLeft(cloud.GetLeft() - cloud.Speed / (_cloudMovementDirectionXSpeedDivider * _scale));
                     break;
                 case MovementDirectionX.Right:
-                    cloud.SetLeft(cloud.GetLeft() + cloud.Speed / _cloudMovementDirectionXSpeedFactor);
+                    cloud.SetLeft(cloud.GetLeft() + cloud.Speed / (_cloudMovementDirectionXSpeedDivider * _scale));
                     break;
                 default:
                     break;
@@ -701,7 +703,7 @@ namespace CandyCrazeGame
             _markNum = _random.Next(0, _clouds.Length);
             cloud.SetContent(_clouds[_markNum]);
 
-            cloud.Speed = _gameSpeed * _cloudSpeedFactor;
+            cloud.Speed = (_gameSpeed * _cloudSpeedFactor) * _scale;
             cloud.MovementDirectionX = (MovementDirectionX)_random.Next(0, Enum.GetNames<MovementDirectionX>().Length);
 
             RandomizeCloudPosition(cloud);
@@ -841,6 +843,9 @@ namespace CandyCrazeGame
             // if rocket power up received then change player to ufo
             if (_powerUpType == PowerUpType.Rocket)
             {
+                _fallingEaseDurationCounter = 0;
+                _jumpingEaseDurationCounter = _jumpEaseDurationCounterDefault;
+
                 _player.SetState(PlayerState.Flying);
                 _player.SetScaleTransform(2);
 
@@ -930,6 +935,7 @@ namespace CandyCrazeGame
             if (_score > _scoreCap)
             {
                 _gameSpeed = _gameSpeedDefault + 0.2 * _difficultyMultiplier;
+                _playerHealthLossPoints++;
 
                 if (_cloudSpawnCounterDefault > 40 / 3)
                     _cloudSpawnCounterDefault -= 0.5;
