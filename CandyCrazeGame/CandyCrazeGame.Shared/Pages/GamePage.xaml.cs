@@ -59,7 +59,7 @@ namespace CandyCrazeGame
         private double _playerHealth;
 
         private int _jumpDurationCounter;
-        private readonly int _jumpDurationCounterDefault = 40;
+        private readonly int _jumpDurationCounterDefault = 50;
 
         private int _idleDurationCounter;
         private readonly int _idleDurationCounterDefault = 20;
@@ -467,7 +467,6 @@ namespace CandyCrazeGame
                                 _idleDurationCounter = _idleDurationCounterDefault;
                             }
                         }
-
                     }
                     break;
                 case PlayerState.Jumping:
@@ -486,17 +485,12 @@ namespace CandyCrazeGame
 
                         // move left
                         if (_pointerPosition.X < _playerHitBox.Left)
-                        {
-                            _player.SetJumpDirection(MovementDirectionX.Left);
                             MovePlayerX(MovementDirectionX.Left);
-                        }
+
 
                         // move right
                         if (_pointerPosition.X > _playerHitBox.Right)
-                        {
-                            _player.SetJumpDirection(MovementDirectionX.Right);
                             MovePlayerX(MovementDirectionX.Right);
-                        }
 
                         if (_jumpDurationCounter <= 0)
                         {
@@ -504,7 +498,6 @@ namespace CandyCrazeGame
                             _jumpDurationCounter = _jumpDurationCounterDefault;
                             _player.SetState(PlayerState.Falling);
                         }
-
                     }
                     break;
                 case PlayerState.Falling:
@@ -546,10 +539,10 @@ namespace CandyCrazeGame
             switch (movementDirectionY)
             {
                 case MovementDirectionY.Up:
-                    _player.SetTop(_player.GetTop() - ((_gameSpeed / 3) + _jumpingEaseDurationCounter));
+                    _player.SetTop(_player.GetTop() - ((_gameSpeed * 1.2) + _jumpingEaseDurationCounter));
                     break;
                 case MovementDirectionY.Down:
-                    _player.SetTop(_player.GetTop() + ((_gameSpeed / 3) + _fallingEaseDurationCounter));
+                    _player.SetTop(_player.GetTop() + ((_gameSpeed * 1.2) + _fallingEaseDurationCounter));
                     break;
                 default:
                     break;
@@ -561,10 +554,16 @@ namespace CandyCrazeGame
             switch (movementDirectionX)
             {
                 case MovementDirectionX.Left:
-                    _player.SetLeft(_player.GetLeft() - _gameSpeed * 1.1);
+                    {
+                        _player.SetJumpDirection(MovementDirectionX.Left);
+                        _player.SetLeft(_player.GetLeft() - _gameSpeed * 1.2);
+                    }
                     break;
                 case MovementDirectionX.Right:
-                    _player.SetLeft(_player.GetLeft() + _gameSpeed * 1.1);
+                    {
+                        _player.SetJumpDirection(MovementDirectionX.Right);
+                        _player.SetLeft(_player.GetLeft() + _gameSpeed * 1.2);
+                    }
                     break;
                 default:
                     break;
