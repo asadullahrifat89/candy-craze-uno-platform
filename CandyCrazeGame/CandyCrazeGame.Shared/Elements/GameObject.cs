@@ -132,6 +132,11 @@ namespace CandyCrazeGame
             _compositeTransform.ScaleY = scaleTransform;
         }
 
+        public void SetScaleX(double scaleX)
+        {
+            _compositeTransform.ScaleX = scaleX;
+        }
+
         #endregion
     }
 

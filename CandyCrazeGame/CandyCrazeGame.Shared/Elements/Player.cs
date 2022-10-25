@@ -46,6 +46,21 @@ namespace CandyCrazeGame
             }
         }
 
+        public void SetJumpDirection(JumpDirection jumpDirection)
+        {
+            switch (jumpDirection)
+            {
+                case JumpDirection.Left:
+                    SetScaleX(-1);
+                    break;
+                case JumpDirection.Right:
+                    SetScaleX(1);
+                    break;
+                default:
+                    break;
+            }
+        }
+
         #endregion
     }
 
@@ -54,5 +69,11 @@ namespace CandyCrazeGame
         Idle,
         Jumping,
         Falling
+    }
+
+    public enum JumpDirection
+    {
+        Left,
+        Right,
     }
 }
