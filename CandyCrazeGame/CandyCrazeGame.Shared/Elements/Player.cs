@@ -48,14 +48,14 @@ namespace CandyCrazeGame
             }
         }
 
-        public void SetJumpDirection(JumpDirection jumpDirection)
+        public void SetJumpDirection(MovementDirectionX jumpDirection)
         {
             switch (jumpDirection)
             {
-                case JumpDirection.Left:
+                case MovementDirectionX.Left:
                     SetScaleX(-1);
                     break;
-                case JumpDirection.Right:
+                case MovementDirectionX.Right:
                     SetScaleX(1);
                     break;
                 default:
@@ -73,7 +73,13 @@ namespace CandyCrazeGame
         Falling
     }
 
-    public enum JumpDirection
+    public enum MovementDirectionY
+    {
+        Up,
+        Down,
+    }
+
+    public enum MovementDirectionX
     {
         Left,
         Right,
