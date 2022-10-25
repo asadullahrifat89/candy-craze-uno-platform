@@ -122,6 +122,7 @@
     <Content Include="$(MSBuildThisFileDirectory)Assets\Sounds\food-bite3.mp3" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Sounds\game-over.mp3" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Sounds\menu-select.mp3" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Sounds\health_loss.mp3" />
     <_Globbled_Page Include="$(MSBuildThisFileDirectory)**/*.xaml" Exclude="@(Page);@(ApplicationDefinition)">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

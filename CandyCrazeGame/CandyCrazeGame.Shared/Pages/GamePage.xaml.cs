@@ -22,7 +22,6 @@ namespace CandyCrazeGame
 
         private double _gameSpeed = 6;
         private readonly double _gameSpeedDefault = 6;
-        private readonly double _gameSpeedfactor = 0.05;
 
         private int _cloudCount;
         private readonly int _cloudSpawnLimit = 15;
@@ -57,9 +56,15 @@ namespace CandyCrazeGame
         private Uri[] _collectibles;
 
         private double _playerHealth;
+        private int _damageRecoveryOpacityFrameSkip;
+        private int _damageRecoveryCounter = 100;
+        private readonly int _damageRecoveryDelay = 400;
 
-        private int _jumpDurationCounter;
-        private readonly int _jumpDurationCounterDefault = 50;
+        private bool _isRecoveringFromDamage;
+
+        private double _jumpDurationCounter;
+        private double _jumpDurationCounterDefault;
+        private readonly double _airborneDuration = 40;
 
         private int _idleDurationCounter;
         private readonly int _idleDurationCounterDefault = 20;
@@ -252,6 +257,7 @@ namespace CandyCrazeGame
 
             _playerHealth = 100;
 
+            _jumpDurationCounterDefault = _airborneDuration * _scale;
             _jumpDurationCounter = _jumpDurationCounterDefault;
             _idleDurationCounter = _idleDurationCounterDefault;
             _jumpingEaseDurationCounter = _jumpEaseDurationCounterDefault;
@@ -449,6 +455,28 @@ namespace CandyCrazeGame
 
         private void UpdatePlayer()
         {
+            if (_isRecoveringFromDamage)
+            {
+                _damageRecoveryOpacityFrameSkip--;
+                if (_damageRecoveryOpacityFrameSkip < 0)
+                {
+                    _player.Opacity = 0.33;
+                    _damageRecoveryOpacityFrameSkip = 5;
+                }
+                else
+                {
+                    _player.Opacity = 1;
+                }
+
+                _damageRecoveryCounter--;
+
+                if (_damageRecoveryCounter <= 0)
+                {
+                    _player.Opacity = 1;
+                    _isRecoveringFromDamage = false;
+                }
+            }
+
             switch (_player.PlayerState)
             {
                 case PlayerState.Idle:
@@ -471,22 +499,14 @@ namespace CandyCrazeGame
                     break;
                 case PlayerState.Jumping:
                     {
-                        //TODO: change state to jumping and count cool down
-
                         _jumpDurationCounter--;
 
                         if (_playerHitBox.Top > 0)
-                        {
-                            if (_jumpingEaseDurationCounter > 0)
-                                _jumpingEaseDurationCounter -= 0.1;
-
                             MovePlayerY(MovementDirectionY.Up);
-                        }
 
                         // move left
                         if (_pointerPosition.X < _playerHitBox.Left)
                             MovePlayerX(MovementDirectionX.Left);
-
 
                         // move right
                         if (_pointerPosition.X > _playerHitBox.Right)
@@ -502,9 +522,6 @@ namespace CandyCrazeGame
                     break;
                 case PlayerState.Falling:
                     {
-                        //TODO: change state to falling and land on a cloud
-
-                        _fallingEaseDurationCounter += 0.1;
                         MovePlayerY(MovementDirectionY.Down);
 
                         if (_pointerPosition.X < _playerHitBox.Left)
@@ -516,7 +533,8 @@ namespace CandyCrazeGame
                         if (_playerHitBox.Top > _windowHeight)
                         {
                             //TODO: loose health
-                            //TODO: respawn
+                            LooseHealth(20);
+
                             //TODO: animate health loss
 
                             _fallingEaseDurationCounter = 0;
@@ -539,10 +557,18 @@ namespace CandyCrazeGame
             switch (movementDirectionY)
             {
                 case MovementDirectionY.Up:
-                    _player.SetTop(_player.GetTop() - ((_gameSpeed * 1.2) + _jumpingEaseDurationCounter));
+                    {
+                        if (_jumpingEaseDurationCounter > 0)
+                            _jumpingEaseDurationCounter -= 0.1;
+
+                        _player.SetTop(_player.GetTop() - ((_gameSpeed * 1.5) + _jumpingEaseDurationCounter));
+                    }
                     break;
                 case MovementDirectionY.Down:
-                    _player.SetTop(_player.GetTop() + ((_gameSpeed * 1.2) + _fallingEaseDurationCounter));
+                    {
+                        _fallingEaseDurationCounter += 0.1;
+                        _player.SetTop(_player.GetTop() + ((_gameSpeed * 1.5) + _fallingEaseDurationCounter));
+                    }
                     break;
                 default:
                     break;
@@ -556,13 +582,13 @@ namespace CandyCrazeGame
                 case MovementDirectionX.Left:
                     {
                         _player.SetJumpDirection(MovementDirectionX.Left);
-                        _player.SetLeft(_player.GetLeft() - _gameSpeed * 1.2);
+                        _player.SetLeft(_player.GetLeft() - _gameSpeed * 1.5);
                     }
                     break;
                 case MovementDirectionX.Right:
                     {
                         _player.SetJumpDirection(MovementDirectionX.Right);
-                        _player.SetLeft(_player.GetLeft() + _gameSpeed * 1.2);
+                        _player.SetLeft(_player.GetLeft() + _gameSpeed * 1.5);
                     }
                     break;
                 default:
@@ -694,6 +720,7 @@ namespace CandyCrazeGame
 
             AddScore(5);
             RecyleCollectible(collectible);
+            AddHealth(1);
 
             _collectibleCollected++;
         }
@@ -766,6 +793,34 @@ namespace CandyCrazeGame
 
         #endregion
 
+        #region Health
+
+        private void AddHealth(double health)
+        {
+            if (_playerHealth < 100)
+            {
+                if (_playerHealth + health > 100)
+                    health = _playerHealth + health - 100;
+
+                _playerHealth += health;
+            }
+        }
+
+        private void LooseHealth(double health)
+        {
+            SoundHelper.PlaySound(SoundType.HEALTH_LOSS);
+
+            _damageRecoveryCounter = _damageRecoveryDelay;
+            _isRecoveringFromDamage = true;
+
+            _playerHealth -= health;
+
+            if (_playerHealth <= 0)
+                GameOver();
+        }
+
+        #endregion
+
         #endregion
 
         #region Score
@@ -827,6 +882,8 @@ namespace CandyCrazeGame
                 _player.SetSize(
                     width: Constants.PLAYER_WIDTH * _scale,
                     height: Constants.PLAYER_HEIGHT * _scale);
+
+                _jumpDurationCounterDefault = _airborneDuration * _scale;
             }
         }
 

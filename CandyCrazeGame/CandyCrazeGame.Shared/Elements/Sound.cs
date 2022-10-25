@@ -67,6 +67,7 @@
         POWER_UP,
         POWER_DOWN,
         JUMP,
-        COLLECTIBLE
+        COLLECTIBLE,
+        HEALTH_LOSS
     }
 }
