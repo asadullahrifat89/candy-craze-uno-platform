@@ -47,10 +47,9 @@ namespace CandyCrazeGame
                    .CreateDefaultBuilder()
                    .ConfigureServices(serviceCollection =>
                    {
-                       //serviceCollection.AddHttpService(lifeTime: 300, retryCount: 3, retryWait: 1);
-                       //serviceCollection.AddSingleton<IHttpRequestService, HttpRequestService>();
-                       //serviceCollection.AddSingleton<IBackendService, BackendService>();
-                       //TODO: fix service injection
+                       serviceCollection.AddHttpService(lifeTime: 300, retryCount: 3, retryWait: 1);
+                       serviceCollection.AddSingleton<IHttpRequestService, HttpRequestService>();
+                       serviceCollection.AddSingleton<IBackendService, BackendService>();
                    })
                    .Build();
 
@@ -72,7 +71,7 @@ namespace CandyCrazeGame
             //TODO: fix if going back to
             _goBackPageRoutes = new List<(Type IfGoingBackTo, Type RouteTo)>() { /*(IfGoingBackTo: typeof(GameOverPage), RouteTo: typeof(StartPage))*/ };
 
-            //LocalizationHelper.CurrentCulture = "en"; // TODO: fix localization start up
+            LocalizationHelper.CurrentCulture = "en";
         }
 
         #endregion        
@@ -112,9 +111,7 @@ namespace CandyCrazeGame
 #endif
             {
                 if (rootFrame.Content == null)
-                    //TODO: go to start page
-                    //rootFrame.Navigate(typeof(StartPage), args.Arguments);
-                    rootFrame.Navigate(typeof(GamePage), args.Arguments);
+                    rootFrame.Navigate(typeof(StartPage), args.Arguments);
 
                 _window.Activate();
             }

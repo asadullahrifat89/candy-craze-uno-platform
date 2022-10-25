@@ -11,6 +11,9 @@
   <Import Project="CandyCrazeGame.Shared.projitems" Label="Shared" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\CodeSharing\Microsoft.CodeSharing.CSharp.targets" />
   <ItemGroup>
+    <UpToDateCheckInput Remove="Pages\StartPage.xaml" />
+  </ItemGroup>
+  <ItemGroup>
     <_Globbed_Compile Remove="Constants.cs" />
     <_Globbed_Compile Remove="Elements\Cloud.cs" />
     <_Globbed_Compile Remove="Elements\Collectible.cs" />
@@ -19,8 +22,12 @@
     <_Globbed_Compile Remove="Elements\Player.cs" />
     <_Globbed_Compile Remove="Elements\PowerUp.cs" />
     <_Globbed_Compile Remove="Elements\Sound.cs" />
+    <_Globbed_Compile Remove="Pages\StartPage.xaml.cs" />
   </ItemGroup>
   <ItemGroup>
+    <_Globbed_Content Remove="Assets\Images\cloud1.png" />
+    <_Globbed_Content Remove="Assets\Images\cloud2.png" />
+    <_Globbed_Content Remove="Assets\Images\cloud3.png" />
     <_Globbed_Content Remove="Assets\Images\collectible1.png" />
     <_Globbed_Content Remove="Assets\Images\collectible2.png" />
     <_Globbed_Content Remove="Assets\Images\collectible3.png" />
@@ -43,5 +50,8 @@
     <_Globbed_Content Remove="Assets\Sounds\menu-select.mp3" />
     <_Globbed_Content Remove="Assets\Sounds\power-down.mp3" />
     <_Globbed_Content Remove="Assets\Sounds\power-up.mp3" />
+  </ItemGroup>
+  <ItemGroup>
+    <_Globbled_Page Remove="Pages\StartPage.xaml" />
   </ItemGroup>
 </Project>
