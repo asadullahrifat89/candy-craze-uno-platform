@@ -24,10 +24,11 @@ namespace CandyCrazeGame
         private readonly double _gameSpeedDefault = 5;
 
         private int _cloudCount;
-        private readonly int _cloudSpawnLimit = 12;
+        private readonly int _cloudSpawnLimit = 15;
         private int _cloudSpawnCounter;
         private readonly int _cloudSpawnCounterDefault = 20;
         private readonly int _cloudMovementDirectionXSpeedFactor = 5;
+        private readonly double _cloudSpeedFactor = 0.9;
 
         private int _powerUpCount;
         private readonly int _powerUpSpawnLimit = 1;
@@ -226,7 +227,7 @@ namespace CandyCrazeGame
 
             _player.SetPosition(
                 left: (_landedCloud.GetLeft() + _landedCloud.Width / 2) - _player.Width / 2,
-                top: (_landedCloud.GetTop() + _landedCloud.Height / 2) - _player.Height / 2);
+                top: (_landedCloud.GetTop() + _landedCloud.Height / 2) - _player.Height);
 
             _player.SetZ(1);
             GameView.Children.Add(_player);
@@ -655,7 +656,7 @@ namespace CandyCrazeGame
         {
             Cloud cloud = new(_scale)
             {
-                Speed = _gameSpeed / 1.75,
+                Speed = _gameSpeed * _cloudSpeedFactor,
                 MovementDirectionX = (MovementDirectionX)_random.Next(0, Enum.GetNames<MovementDirectionX>().Length),
             };
 
@@ -703,7 +704,8 @@ namespace CandyCrazeGame
         {
             _markNum = _random.Next(0, _clouds.Length);
             cloud.SetContent(_clouds[_markNum]);
-            cloud.Speed = _gameSpeed / 1.75;
+
+            cloud.Speed = _gameSpeed * _cloudSpeedFactor;
 
             RandomizeCloudPosition(cloud);
         }
@@ -712,7 +714,7 @@ namespace CandyCrazeGame
         {
             cloud.SetPosition(
                 left: _random.Next((int)(50 * _scale), (int)(GameView.Width - (50 * _scale))),
-                top: (int)GameView.Height / 4 * -1);
+                top: (int)GameView.Height / 2 * -1);
         }
 
         #endregion
@@ -842,11 +844,14 @@ namespace CandyCrazeGame
             // if rocket power up received then change player to ufo
             if (_powerUpType == PowerUpType.Rocket)
             {
-                _player.SetSize(
-                  width: 512 * _scale,
-                  height: 256 * _scale);
-
                 _player.SetState(PlayerState.Flying);
+
+                _player.SetScaleTransform(2);
+
+                //_player.SetSize(
+                //  width: 256 * _scale,
+                //  height: 256 * _scale);
+
                 SoundHelper.PlaySound(SoundType.SPACESHIP_FLIGHT);
             }
 
@@ -875,10 +880,10 @@ namespace CandyCrazeGame
             // if was in rocket mode set to falling mode
             if (_powerUpType == PowerUpType.Rocket)
             {
-                _player.SetSize(
-                   width: Constants.PLAYER_WIDTH * _scale,
-                   height: Constants.PLAYER_HEIGHT * _scale);
-
+                //_player.SetSize(
+                //   width: Constants.PLAYER_WIDTH * _scale,
+                //   height: Constants.PLAYER_HEIGHT * _scale);
+                _player.SetScaleTransform(1);
                 _player.SetState(PlayerState.Falling);
                 SoundHelper.StopSound(SoundType.SPACESHIP_FLIGHT);
             }
