@@ -53,13 +53,14 @@ namespace CandyCrazeGame
 
         private double _playerHealth;
 
-        private int _jumpDurationCounter = 50;
-        private int _jumpDurationCounterDefault = 50;
+        private int _jumpDurationCounter = 20;
+        private readonly int _jumpDurationCounterDefault = 20;
 
         private int _idleDurationCounter = 20;
-        private int _idleDurationCounterDefault = 20;
+        private readonly int _idleDurationCounterDefault = 20;
 
-        private double _jumpEaseDurationCounter = 1;
+        private double _jumpEaseDurationCounter = 10;
+        private readonly double _jumpEaseDurationCounterDefault = 10;
 
         #endregion
 
@@ -243,6 +244,10 @@ namespace CandyCrazeGame
             PlayerHealthBarPanel.Visibility = Visibility.Visible;
 
             _playerHealth = 100;
+
+            _jumpDurationCounter = _jumpDurationCounterDefault;
+            _idleDurationCounter = _idleDurationCounterDefault;
+            _jumpEaseDurationCounter = _jumpEaseDurationCounterDefault;
 
             foreach (GameObject x in GameView.GetGameObjects<PowerUp>())
             {
@@ -447,17 +452,10 @@ namespace CandyCrazeGame
 
                         if (_playerHitBox.Top > 0)
                         {
-                            if (_jumpDurationCounter <= _jumpDurationCounterDefault / 2)
-                            {
-                                if (_jumpEaseDurationCounter > 0)
-                                    _jumpEaseDurationCounter -= 0.1;
+                            if (_jumpEaseDurationCounter > 0)
+                                _jumpEaseDurationCounter -= 0.1;
 
-                                _player.SetTop(_player.GetTop() - (_gameSpeed + _jumpEaseDurationCounter));
-                            }
-                            else
-                            {
-                                _player.SetTop(_player.GetTop() - _gameSpeed * 1.75);
-                            }
+                            _player.SetTop(_player.GetTop() - (_gameSpeed + _jumpEaseDurationCounter));
                         }
 
                         if (_pointerPosition.X < _playerHitBox.Left)
@@ -474,7 +472,7 @@ namespace CandyCrazeGame
 
                         if (_jumpDurationCounter <= 0)
                         {
-                            _jumpEaseDurationCounter = 1;
+                            _jumpEaseDurationCounter = _jumpEaseDurationCounterDefault;
                             _jumpDurationCounter = _jumpDurationCounterDefault;
                             _player.SetState(PlayerState.Falling);
                         }
@@ -485,7 +483,7 @@ namespace CandyCrazeGame
                     {
                         //TODO: change state to falling and land on a cloud
 
-                        _fallingEaseDurationCounter += 0.3;
+                        _fallingEaseDurationCounter += 0.5;
 
                         _player.SetTop(_player.GetTop() + (_gameSpeed + _fallingEaseDurationCounter));
 
