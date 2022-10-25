@@ -27,6 +27,7 @@ namespace CandyCrazeGame
         private readonly int _cloudSpawnLimit = 15;
         private int _cloudSpawnCounter;
         private readonly int _cloudSpawnCounterDefault = 20;
+        private readonly int _cloudMovementDirectionXFactor = 5;
 
         private int _powerUpCount;
         private readonly int _powerUpSpawnLimit = 1;
@@ -299,7 +300,7 @@ namespace CandyCrazeGame
             ScoreText.Text = _score.ToString("#");
             PlayerHealthBar.Value = _playerHealth;
 
-            _playerHitBox = _player.GetStandingHitBox(_scale);
+            _playerHitBox = _isPowerMode && _powerUpType == PowerUpType.Rocket ? _player.GetHitBox() : _player.GetStandingHitBox(_scale);
 
             SpawnGameObjects();
             UpdateGameObjects();
@@ -518,6 +519,20 @@ namespace CandyCrazeGame
                         {
                             _player.SetTop(_player.GetTop() + _landedCloud.Speed);
 
+                            var inCloud = _landedCloud as Cloud;
+
+                            switch (inCloud.MovementDirectionX)
+                            {
+                                case MovementDirectionX.Left:
+                                    _player.SetLeft(_player.GetLeft() - _landedCloud.Speed / _cloudMovementDirectionXFactor);
+                                    break;
+                                case MovementDirectionX.Right:
+                                    _player.SetLeft(_player.GetLeft() + _landedCloud.Speed / _cloudMovementDirectionXFactor);
+                                    break;
+                                default:
+                                    break;
+                            }
+
                             if (_playerHitBox.Top > _windowHeight / 4)
                             {
                                 _fallingEaseDurationCounter = 0;
@@ -640,7 +655,8 @@ namespace CandyCrazeGame
         {
             Cloud cloud = new(_scale)
             {
-                Speed = _gameSpeed
+                Speed = _gameSpeed,
+                MovementDirectionX = (MovementDirectionX)_random.Next(0, Enum.GetNames<MovementDirectionX>().Length),
             };
 
             RecyleCloud(cloud);
@@ -651,6 +667,20 @@ namespace CandyCrazeGame
         private void UpdateCloud(GameObject cloud)
         {
             cloud.SetTop(cloud.GetTop() + cloud.Speed);
+
+            var inCloud = cloud as Cloud;
+
+            switch (inCloud.MovementDirectionX)
+            {
+                case MovementDirectionX.Left:
+                    cloud.SetLeft(cloud.GetLeft() - cloud.Speed / _cloudMovementDirectionXFactor);
+                    break;
+                case MovementDirectionX.Right:
+                    cloud.SetLeft(cloud.GetLeft() + cloud.Speed / _cloudMovementDirectionXFactor);
+                    break;
+                default:
+                    break;
+            }
 
             var cloudHitBox = cloud.GetPlatformHitBox(_scale);
 
@@ -812,7 +842,7 @@ namespace CandyCrazeGame
             if (_powerUpType == PowerUpType.Rocket)
             {
                 _player.SetSize(
-                  width: 256 * _scale,
+                  width: 512 * _scale,
                   height: 256 * _scale);
 
                 _player.SetState(PlayerState.Flying);
@@ -939,7 +969,7 @@ namespace CandyCrazeGame
         {
             _scale = ScalingHelper.GetGameObjectScale(_windowWidth);
 
-            GameView.Width = _windowWidth;
+            GameView.Width = _windowWidth > 1000 ? 1000 : _windowWidth;
             GameView.Height = _windowHeight;
 
             if (_player is not null)

@@ -13,5 +13,11 @@
         }
 
         #endregion
+
+        #region Properties
+
+        public MovementDirectionX MovementDirectionX { get; set; }
+
+        #endregion
     }
 }

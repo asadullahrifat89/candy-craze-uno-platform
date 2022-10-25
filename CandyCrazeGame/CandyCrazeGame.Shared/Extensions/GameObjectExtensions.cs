@@ -43,8 +43,7 @@ namespace CandyCrazeGame
               width: gameObject.Width,
               height: gameObject.Height);
 
-            //gameObject.SetHitBoxBorder(rect);
-
+            gameObject.SetHitBoxBorder(rect);
             return rect;
         }
 
@@ -57,7 +56,6 @@ namespace CandyCrazeGame
               height: 10 * scale);
 
             gameObject.SetHitBoxBorder(rect);
-
             return rect;
         }
 
@@ -70,7 +68,6 @@ namespace CandyCrazeGame
               height: gameObject.Height - 15 * scale);
 
             gameObject.SetHitBoxBorder(rect);
-
             return rect;
         }
 

@@ -85,6 +85,7 @@ namespace CandyCrazeGame
 
     public enum MovementDirectionX
     {
+        None,
         Left,
         Right,
     }

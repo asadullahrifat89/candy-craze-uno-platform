@@ -36,7 +36,12 @@ namespace CandyCrazeGame
                             {
                                 sound = new Sound(soundType: x.Key, soundSource: x.Value, volume: 0.9, loop: true);
                             }
-                            break;                        
+                            break;
+                        case SoundType.SPACESHIP_FLIGHT:
+                            {
+                                sound = new Sound(soundType: x.Key, soundSource: x.Value, volume: 0.9, loop: true);
+                            }
+                            break;
                         default:
                             {
                                 sound = new Sound(soundType: x.Key, soundSource: x.Value);
