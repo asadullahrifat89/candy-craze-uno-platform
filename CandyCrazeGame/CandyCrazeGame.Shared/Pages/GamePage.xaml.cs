@@ -24,9 +24,9 @@ namespace CandyCrazeGame
         private readonly double _gameSpeedDefault = 5;
 
         private int _cloudCount;
-        private readonly int _cloudSpawnLimit = 12;
-        private int _cloudSpawnCounter;
-        private readonly int _cloudSpawnCounterDefault = 40;
+        private readonly int _cloudSpawnLimit = 15;
+        private double _cloudSpawnCounter;
+        private double _cloudSpawnCounterDefault = 40;
         private readonly int _cloudMovementDirectionXSpeedFactor = 5;
         private readonly double _cloudSpeedFactor = 0.9;
 
@@ -212,14 +212,14 @@ namespace CandyCrazeGame
 
         private void PopulateGameView()
         {
-            for (int i = 0; i < _cloudSpawnLimit; i++)
-            {
-                SpawnCloud();
+            //for (int i = 0; i < _cloudSpawnLimit; i++)
+            //{
+            SpawnCloud();
 
-                var cloud = GameView.Children.OfType<Cloud>().Last();
+            //    var cloud = GameView.Children.OfType<Cloud>().Last();
 
-                RandomizeCloudPosition(cloud, i * -1);
-            }
+            //    RandomizeCloudPosition(cloud, i * -1);
+            //}
 
             _landedCloud = GameView.Children.OfType<Cloud>().First();
 
@@ -275,7 +275,7 @@ namespace CandyCrazeGame
             _idleDurationCounter = _idleDurationCounterDefault;
             _jumpingEaseDurationCounter = _jumpEaseDurationCounterDefault;
 
-            //_cloudSpawnCounterDefault = 40;
+            _cloudSpawnCounterDefault = 40;
             _cloudSpawnCounter = _cloudSpawnCounterDefault;
 
             foreach (GameObject x in GameView.GetGameObjects<PowerUp>())
@@ -393,16 +393,16 @@ namespace CandyCrazeGame
                 }
             }
 
-            //if (_cloudCount < _cloudSpawnLimit)
-            //{
-            //    _cloudSpawnCounter--;
+            if (_cloudCount < _cloudSpawnLimit)
+            {
+                _cloudSpawnCounter--;
 
-            //    if (_cloudSpawnCounter < 1)
-            //    {
-            //        SpawnCloud();
-            //        _cloudSpawnCounter = _cloudSpawnCounterDefault;
-            //    }
-            //}
+                if (_cloudSpawnCounter < 1)
+                {
+                    SpawnCloud();
+                    _cloudSpawnCounter = _cloudSpawnCounterDefault;
+                }
+            }
         }
 
         private void UpdateGameObjects()
@@ -453,11 +453,6 @@ namespace CandyCrazeGame
                             RecyleCollectible(x);
                         }
                         break;
-                    //case ElementType.CLOUD:
-                    //    {
-                    //        RecyleCloud(x);
-                    //    }
-                    //    break;
                     default:
                         break;
                 }
@@ -702,8 +697,11 @@ namespace CandyCrazeGame
             }
 
             if (cloud.GetTop() > GameView.Height)
-                //GameView.AddDestroyableGameObject(cloud);
-                RecyleCloud(cloud as Cloud);
+            {
+                GameView.AddDestroyableGameObject(cloud);
+                _cloudCount--;
+                //RecyleCloud(cloud as Cloud);
+            }
         }
 
         private void RecyleCloud(Cloud cloud)
@@ -948,7 +946,9 @@ namespace CandyCrazeGame
             if (_score > _scoreCap)
             {
                 _gameSpeed = _gameSpeedDefault + 0.2 * _difficultyMultiplier;
-                //_cloudSpawnCounterDefault -= 0.5;
+
+                if (_cloudSpawnCounterDefault > 40 / 3)
+                    _cloudSpawnCounterDefault -= 0.5;
 
                 _difficultyMultiplier++;
                 _scoreCap += 50;
