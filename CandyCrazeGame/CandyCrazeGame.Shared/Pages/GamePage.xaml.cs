@@ -20,8 +20,8 @@ namespace CandyCrazeGame
         private readonly Random _random = new();
         private int _markNum;
 
-        private double _gameSpeed = 6;
-        private readonly double _gameSpeedDefault = 6;
+        private double _gameSpeed = 5;
+        private readonly double _gameSpeedDefault = 5;
 
         private int _cloudCount;
         private readonly int _cloudSpawnLimit = 15;
@@ -295,11 +295,10 @@ namespace CandyCrazeGame
             ScoreText.Text = _score.ToString("#");
             PlayerHealthBar.Value = _playerHealth;
 
-            _playerHitBox = _player.GetStandingHitBox();
+            _playerHitBox = _player.GetStandingHitBox(_scale);
 
             SpawnGameObjects();
             UpdateGameObjects();
-
             RemoveGameObjects();
 
             if (_isPowerMode)
@@ -561,13 +560,13 @@ namespace CandyCrazeGame
                         if (_jumpingEaseDurationCounter > 0)
                             _jumpingEaseDurationCounter -= 0.1;
 
-                        _player.SetTop(_player.GetTop() - ((_gameSpeed * 1.5) + _jumpingEaseDurationCounter));
+                        _player.SetTop(_player.GetTop() - ((_gameSpeed * 1.2) + _jumpingEaseDurationCounter));
                     }
                     break;
                 case MovementDirectionY.Down:
                     {
                         _fallingEaseDurationCounter += 0.1;
-                        _player.SetTop(_player.GetTop() + ((_gameSpeed * 1.5) + _fallingEaseDurationCounter));
+                        _player.SetTop(_player.GetTop() + ((_gameSpeed * 1.2) + _fallingEaseDurationCounter));
                     }
                     break;
                 default:
@@ -582,13 +581,13 @@ namespace CandyCrazeGame
                 case MovementDirectionX.Left:
                     {
                         _player.SetJumpDirection(MovementDirectionX.Left);
-                        _player.SetLeft(_player.GetLeft() - _gameSpeed * 1.5);
+                        _player.SetLeft(_player.GetLeft() - _gameSpeed * 1.2);
                     }
                     break;
                 case MovementDirectionX.Right:
                     {
                         _player.SetJumpDirection(MovementDirectionX.Right);
-                        _player.SetLeft(_player.GetLeft() + _gameSpeed * 1.5);
+                        _player.SetLeft(_player.GetLeft() + _gameSpeed * 1.2);
                     }
                     break;
                 default:
@@ -616,7 +615,7 @@ namespace CandyCrazeGame
         {
             cloud.SetTop(cloud.GetTop() + cloud.Speed);
 
-            var cloudHitBox = cloud.GetPlatformHitBox();
+            var cloudHitBox = cloud.GetPlatformHitBox(_scale);
 
             // only land on a cloud if it's almost in the middle
             if (_playerHitBox.Top > _windowHeight / 3)
@@ -720,7 +719,7 @@ namespace CandyCrazeGame
 
             AddScore(5);
             RecyleCollectible(collectible);
-            AddHealth(1);
+            AddHealth(2);
 
             _collectibleCollected++;
         }

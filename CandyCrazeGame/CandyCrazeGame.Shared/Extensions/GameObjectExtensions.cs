@@ -48,26 +48,26 @@ namespace CandyCrazeGame
             return rect;
         }
 
-        public static Rect GetPlatformHitBox(this GameObject gameObject)
+        public static Rect GetPlatformHitBox(this GameObject gameObject, double scale)
         {
             var rect = new Rect(
               x: gameObject.GetLeft() + gameObject.Width / 4,
-              y: gameObject.GetTop() + gameObject.Height - 10,
+              y: gameObject.GetTop() + gameObject.Height - 10 * scale,
               width: gameObject.Width - gameObject.Width / 4,
-              height: 10);
+              height: 10 * scale);
 
             gameObject.SetHitBoxBorder(rect);
 
             return rect;
         }
 
-        public static Rect GetStandingHitBox(this GameObject gameObject)
+        public static Rect GetStandingHitBox(this GameObject gameObject, double scale)
         {
             var rect = new Rect(
               x: gameObject.GetLeft() + gameObject.Width / 4,
-              y: gameObject.GetTop() + gameObject.Height - 15,
+              y: gameObject.GetTop() + gameObject.Height - 15 * scale,
               width: gameObject.Width - gameObject.Width / 4,
-              height: gameObject.Height - 15);
+              height: gameObject.Height - 15 * scale);
 
             gameObject.SetHitBoxBorder(rect);
 
