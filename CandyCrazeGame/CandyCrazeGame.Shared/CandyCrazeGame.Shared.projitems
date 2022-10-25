@@ -18,9 +18,50 @@
     <Compile Include="$(MSBuildThisFileDirectory)App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Constants.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Elements\GameEnvironment.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Elements\GameObject.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Elements\Sound.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\GameObjectExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\HttpServiceExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\PageExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\StringExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GamePage.xaml.cs">
       <DependentUpon>GamePage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Helpers\AssetHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Helpers\AuthTokenHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Helpers\CacheHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Helpers\CookieHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Helpers\GameProfileHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Helpers\LocalizationHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Helpers\PlayerCredentialsHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Helpers\PlayerScoreHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Helpers\ScalingHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Helpers\SessionHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Helpers\SoundHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Contextual\CandyCrazeGameScore.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Entities\AttachedUser.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Entities\AuthToken.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Entities\EntityBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Entities\GameProfile.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Entities\GameScore.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Entities\LeaderboardPlacement.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Entities\Session.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Global\PlayerCredentials.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Global\PlayerScore.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Responses\ErrorResponse.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Responses\QueryRecordResponse.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Responses\QueryRecordsResponse.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Responses\ServiceResponse.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Peripherals\AudioPlayer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Peripherals\LocalizationKey.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\Contracts\IBackendService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\Contracts\IHttpRequestService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\Contracts\IHttpService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\Implementations\BackendService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\Implementations\HttpRequestService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\Implementations\HttpService.cs" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="$(MSBuildThisFileDirectory)GamePage.xaml">
@@ -40,6 +81,15 @@
 		 explicitly included in the projitem, so files can be added from vscode
 		 without manipulating the projitem file.
 	-->
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Images\collectible1.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Images\collectible2.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Images\collectible3.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Images\collectible4.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Images\collectible5.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Images\collectible6.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Images\collectible7.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Images\logo_brand.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\localization.json" />
     <_Globbled_Page Include="$(MSBuildThisFileDirectory)**/*.xaml" Exclude="@(Page);@(ApplicationDefinition)">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -59,5 +109,8 @@
     <ApplicationDefinition Update="$(MSBuildThisFileDirectory)**/*.xaml" XamlRuntime="WinUI" />
     <!-- Make sure XAML files force reevaluation of up-to-date checks -->
     <UpToDateCheckInput Include="$(MSBuildThisFileDirectory)**/*.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="$(MSBuildThisFileDirectory)Assets\Sounds\" />
   </ItemGroup>
 </Project>
