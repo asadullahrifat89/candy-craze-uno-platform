@@ -25,8 +25,8 @@ namespace CandyCrazeGame
 
         private int _cloudCount;
         private readonly int _cloudSpawnLimit = 12;
-        private double _cloudSpawnCounter;
-        private double _cloudSpawnCounterDefault = 40;
+        private int _cloudSpawnCounter;
+        private readonly int _cloudSpawnCounterDefault = 40;
         private readonly int _cloudMovementDirectionXSpeedFactor = 5;
         private readonly double _cloudSpeedFactor = 0.9;
 
@@ -275,7 +275,7 @@ namespace CandyCrazeGame
             _idleDurationCounter = _idleDurationCounterDefault;
             _jumpingEaseDurationCounter = _jumpEaseDurationCounterDefault;
 
-            _cloudSpawnCounterDefault = 40;
+            //_cloudSpawnCounterDefault = 40;
             _cloudSpawnCounter = _cloudSpawnCounterDefault;
 
             foreach (GameObject x in GameView.GetGameObjects<PowerUp>())
@@ -663,13 +663,9 @@ namespace CandyCrazeGame
 
         private void SpawnCloud()
         {
-            Cloud cloud = new(_scale)
-            {
-                Speed = _gameSpeed * _cloudSpeedFactor,
-                MovementDirectionX = (MovementDirectionX)_random.Next(0, Enum.GetNames<MovementDirectionX>().Length),
-            };
-
+            Cloud cloud = new(_scale);
             RecyleCloud(cloud);
+
             GameView.Children.Add(cloud);
             _cloudCount++;
         }
@@ -707,15 +703,16 @@ namespace CandyCrazeGame
 
             if (cloud.GetTop() > GameView.Height)
                 //GameView.AddDestroyableGameObject(cloud);
-                RecyleCloud(cloud);
+                RecyleCloud(cloud as Cloud);
         }
 
-        private void RecyleCloud(GameObject cloud)
+        private void RecyleCloud(Cloud cloud)
         {
             _markNum = _random.Next(0, _clouds.Length);
             cloud.SetContent(_clouds[_markNum]);
 
             cloud.Speed = _gameSpeed * _cloudSpeedFactor;
+            cloud.MovementDirectionX = (MovementDirectionX)_random.Next(0, Enum.GetNames<MovementDirectionX>().Length);
 
             RandomizeCloudPosition(cloud);
         }
@@ -951,7 +948,7 @@ namespace CandyCrazeGame
             if (_score > _scoreCap)
             {
                 _gameSpeed = _gameSpeedDefault + 0.2 * _difficultyMultiplier;
-                _cloudSpawnCounterDefault -= 0.5;
+                //_cloudSpawnCounterDefault -= 0.5;
 
                 _difficultyMultiplier++;
                 _scoreCap += 50;
