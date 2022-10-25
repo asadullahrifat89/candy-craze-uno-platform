@@ -144,6 +144,6 @@ namespace CandyCrazeGame
         POWERUP,
         HEALTH,
         COLLECTIBLE,
-        SPOT,
+        CLOUD,
     }
 }

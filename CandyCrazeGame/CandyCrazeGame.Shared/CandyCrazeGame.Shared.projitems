@@ -19,6 +19,7 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Constants.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Elements\Cloud.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Elements\Collectible.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Elements\GameEnvironment.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Elements\GameObject.cs" />

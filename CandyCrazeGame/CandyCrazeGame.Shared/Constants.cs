@@ -17,6 +17,8 @@ namespace CandyCrazeGame
         public const double COLLECTIBLE_SIZE = 80;
         public const double POWERUP_SIZE = 80;
 
+        public const double CLOUD_SIZE = 120;        
+
         public const double HEALTH_WIDTH = 80;
         public const double HEALTH_HEIGHT = 80;
 

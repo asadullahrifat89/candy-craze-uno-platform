@@ -12,6 +12,7 @@
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\CodeSharing\Microsoft.CodeSharing.CSharp.targets" />
   <ItemGroup>
     <_Globbed_Compile Remove="Constants.cs" />
+    <_Globbed_Compile Remove="Elements\Cloud.cs" />
     <_Globbed_Compile Remove="Elements\Collectible.cs" />
     <_Globbed_Compile Remove="Elements\GameEnvironment.cs" />
     <_Globbed_Compile Remove="Elements\GameObject.cs" />
