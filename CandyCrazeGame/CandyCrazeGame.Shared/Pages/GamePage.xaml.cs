@@ -467,21 +467,18 @@ namespace CandyCrazeGame
             {
                 case PlayerState.Idle:
                     {
-                        if (_playerHitBox.Bottom > _windowHeight / 2)
+                        _player.SetTop(_player.GetTop() + _gameSpeed);
+
+                        _fallingEaseDurationCounter = 0;
+                        _idleDurationCounter--;
+
+                        if (_idleDurationCounter <= 0)
                         {
-                            //TODO: init jump
-                            _fallingEaseDurationCounter = 0;
-                            _idleDurationCounter--;
-
-                            _player.SetTop(_player.GetTop() + _gameSpeed);
-
-                            if (_idleDurationCounter <= 0)
-                            {
-                                SoundHelper.PlaySound(SoundType.JUMP);
-                                _player.SetState(PlayerState.Jumping);
-                                _idleDurationCounter = _idleDurationCounterDefault;
-                            }
+                            SoundHelper.PlaySound(SoundType.JUMP);
+                            _player.SetState(PlayerState.Jumping);
+                            _idleDurationCounter = _idleDurationCounterDefault;
                         }
+
                     }
                     break;
                 case PlayerState.Jumping:
@@ -573,10 +570,13 @@ namespace CandyCrazeGame
 
             var cloudHitBox = cloud.GetPlatformHitBox();
 
-            if (_player.PlayerState == PlayerState.Falling && _playerHitBox.IntersectsWith(cloudHitBox))
+            if (_playerHitBox.Top > _windowHeight / 3)
             {
-                _idleDurationCounter = _idleDurationCounterDefault;
-                _player.SetState(PlayerState.Idle);
+                if (_player.PlayerState == PlayerState.Falling && _playerHitBox.IntersectsWith(cloudHitBox))
+                {
+                    _idleDurationCounter = _idleDurationCounterDefault;
+                    _player.SetState(PlayerState.Idle);
+                }
             }
 
             if (cloud.GetTop() > GameView.Height)

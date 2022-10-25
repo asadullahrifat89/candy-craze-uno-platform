@@ -25,7 +25,7 @@ namespace CandyCrazeGame
 
         #region HitBox Debug
 
-        private Border _hitBoxborder;
+        //private Border _hitBoxborder;
 
         #endregion
 
@@ -48,29 +48,29 @@ namespace CandyCrazeGame
             RenderTransform = _compositeTransform;
             CanDrag = false;
 
-            //Child = _content;
+            Child = _content;
 
             #region HitBox Debug
 
-            BorderThickness = new Microsoft.UI.Xaml.Thickness(1);
-            BorderBrush = new SolidColorBrush(Colors.Black);
+            //BorderThickness = new Microsoft.UI.Xaml.Thickness(1);
+            //BorderBrush = new SolidColorBrush(Colors.Black);
 
-            _hitBoxborder = new Border()
-            {
-                BorderThickness = new Microsoft.UI.Xaml.Thickness(1),
-                BorderBrush = new SolidColorBrush(Colors.Black)
-            };
+            //_hitBoxborder = new Border()
+            //{
+            //    BorderThickness = new Microsoft.UI.Xaml.Thickness(1),
+            //    BorderBrush = new SolidColorBrush(Colors.Black)
+            //};
 
-            var grid = new Grid()
-            {
-                HorizontalAlignment = Microsoft.UI.Xaml.HorizontalAlignment.Center,
-                VerticalAlignment = Microsoft.UI.Xaml.VerticalAlignment.Center
-            };
+            //var grid = new Grid()
+            //{
+            //    HorizontalAlignment = Microsoft.UI.Xaml.HorizontalAlignment.Center,
+            //    VerticalAlignment = Microsoft.UI.Xaml.VerticalAlignment.Center
+            //};
 
-            grid.Children.Add(_content);
-            grid.Children.Add(_hitBoxborder);
+            //grid.Children.Add(_content);
+            //grid.Children.Add(_hitBoxborder);
 
-            Child = grid;
+            //Child = grid;
 
             #endregion
         }
@@ -129,8 +129,8 @@ namespace CandyCrazeGame
 
         public void SetHitBoxBorder(Rect rect)
         {
-            _hitBoxborder.Height = rect.Height;
-            _hitBoxborder.Width = rect.Width;
+            //_hitBoxborder.Height = rect.Height;
+            //_hitBoxborder.Width = rect.Width;
         }
 
         public void SetScaleTransform(double scaleTransform)
