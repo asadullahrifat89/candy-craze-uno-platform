@@ -522,7 +522,7 @@ namespace CandyCrazeGame
                             switch (inCloud.MovementDirectionX)
                             {
                                 case MovementDirectionX.Left:
-                                    _player.SetLeft(_player.GetLeft() - _landedCloud.Speed / _cloudMovementDirectionXSpeedFactor);
+                                    _player.SetLeft(_player.GetLeft() - _landedCloud.Speed / (_cloudMovementDirectionXSpeedDivider * _scale));
                                     break;
                                 case MovementDirectionX.Right:
                                     _player.SetLeft(_player.GetLeft() + _landedCloud.Speed / _cloudMovementDirectionXSpeedFactor);
