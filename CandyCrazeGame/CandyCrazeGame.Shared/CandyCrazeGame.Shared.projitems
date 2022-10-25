@@ -90,6 +90,19 @@
     <Content Include="$(MSBuildThisFileDirectory)Assets\Images\collectible7.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Images\logo_brand.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\localization.json" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Sounds\power-down.mp3" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Sounds\power-up.mp3" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Sounds\background1.mp3" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Sounds\background2.mp3" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Sounds\background3.mp3" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Sounds\jump.mp3" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Sounds\food-bite1.mp3" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Sounds\food-bite2.mp3" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Sounds\food-bite3.mp3" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Sounds\game-over.mp3" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Sounds\intro1.mp3" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Sounds\intro2.mp3" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Sounds\menu-select.mp3" />
     <_Globbled_Page Include="$(MSBuildThisFileDirectory)**/*.xaml" Exclude="@(Page);@(ApplicationDefinition)">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -109,8 +122,5 @@
     <ApplicationDefinition Update="$(MSBuildThisFileDirectory)**/*.xaml" XamlRuntime="WinUI" />
     <!-- Make sure XAML files force reevaluation of up-to-date checks -->
     <UpToDateCheckInput Include="$(MSBuildThisFileDirectory)**/*.xaml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="$(MSBuildThisFileDirectory)Assets\Sounds\" />
   </ItemGroup>
 </Project>

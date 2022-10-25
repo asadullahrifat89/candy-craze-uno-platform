@@ -26,5 +26,17 @@
     <_Globbed_Content Remove="Assets\Images\collectible7.png" />
     <_Globbed_Content Remove="Assets\Images\logo_brand.png" />
     <_Globbed_Content Remove="Assets\localization.json" />
+    <_Globbed_Content Remove="Assets\Sounds\background1.mp3" />
+    <_Globbed_Content Remove="Assets\Sounds\background2.mp3" />
+    <_Globbed_Content Remove="Assets\Sounds\background3.mp3" />
+    <_Globbed_Content Remove="Assets\Sounds\food-bite1.mp3" />
+    <_Globbed_Content Remove="Assets\Sounds\food-bite2.mp3" />
+    <_Globbed_Content Remove="Assets\Sounds\food-bite3.mp3" />
+    <_Globbed_Content Remove="Assets\Sounds\game-over.mp3" />
+    <_Globbed_Content Remove="Assets\Sounds\intro1.mp3" />
+    <_Globbed_Content Remove="Assets\Sounds\intro2.mp3" />
+    <_Globbed_Content Remove="Assets\Sounds\menu-select.mp3" />
+    <_Globbed_Content Remove="Assets\Sounds\power-down.mp3" />
+    <_Globbed_Content Remove="Assets\Sounds\power-up.mp3" />
   </ItemGroup>
 </Project>

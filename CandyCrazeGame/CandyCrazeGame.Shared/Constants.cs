@@ -70,9 +70,11 @@ namespace CandyCrazeGame
             new KeyValuePair<SoundType, string>(SoundType.POWER_UP, "Assets/Sounds/power-up.mp3"),
             new KeyValuePair<SoundType, string>(SoundType.POWER_DOWN, "Assets/Sounds/power-down.mp3"),
 
-            new KeyValuePair<SoundType, string>(SoundType.JUMP, "Assets/Sounds/food-bite1.mp3"),
-            new KeyValuePair<SoundType, string>(SoundType.JUMP, "Assets/Sounds/food-bite2.mp3"),
-            new KeyValuePair<SoundType, string>(SoundType.JUMP, "Assets/Sounds/food-bite3.mp3"),
+            new KeyValuePair<SoundType, string>(SoundType.JUMP, "Assets/Sounds/jump.mp3"),
+
+            new KeyValuePair<SoundType, string>(SoundType.COLLECTIBLE, "Assets/Sounds/food-bite1.mp3"),
+            new KeyValuePair<SoundType, string>(SoundType.COLLECTIBLE, "Assets/Sounds/food-bite2.mp3"),
+            new KeyValuePair<SoundType, string>(SoundType.COLLECTIBLE, "Assets/Sounds/food-bite3.mp3"),
         };
 
         #endregion

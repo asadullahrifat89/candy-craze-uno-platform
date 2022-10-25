@@ -31,12 +31,6 @@ namespace CandyCrazeGame
 
         public double Y { get; set; }
 
-        public bool IsFlaggedForShrinking { get; set; }
-
-        public bool HasShrinked => _compositeTransform.ScaleX <= 0;
-
-        public bool HasAppeared { get; set; } = false;
-
         #endregion
 
         #region Ctor
@@ -136,25 +130,6 @@ namespace CandyCrazeGame
         {
             _compositeTransform.ScaleX = scaleTransform;
             _compositeTransform.ScaleY = scaleTransform;
-        }
-
-        public void Shrink()
-        {
-            _compositeTransform.ScaleX -= 0.1;
-            _compositeTransform.ScaleY -= 0.1;
-        }
-
-        public void Appear()
-        {
-            if (_compositeTransform.ScaleX >= 1)
-            {
-                HasAppeared = true;
-            }
-            else
-            {
-                _compositeTransform.ScaleX += 0.1;
-                _compositeTransform.ScaleY += 0.1;
-            }
         }
 
         #endregion
