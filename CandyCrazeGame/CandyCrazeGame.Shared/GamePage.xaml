@@ -8,10 +8,10 @@
     Background="{ThemeResource GameBackgroundColor}"
     mc:Ignorable="d">
 
-    <Grid>
-        <TextBlock
-            Margin="20"
-            FontSize="30"
-            Text="Hello, world!" />
+    <Grid x:Name="RootGrid">
+        <!--#region Animation-->
+        <!--  This hosts the player and game elements  -->
+        <GameEnvironment x:Name="GameView" Background="Transparent" />
+        <!--#endregion-->
     </Grid>
 </Page>

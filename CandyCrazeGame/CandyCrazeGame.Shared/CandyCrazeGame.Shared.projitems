@@ -97,6 +97,7 @@
     <Content Include="$(MSBuildThisFileDirectory)Assets\Images\collectible6.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Images\collectible7.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Images\logo_brand.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Images\powerup.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\localization.json" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Sounds\background3.mp3" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Sounds\background1.mp3" />
