@@ -67,7 +67,7 @@ namespace CandyCrazeGame
         private double _jumpEaseDurationCounter;
         private readonly double _jumpEaseDurationCounterDefault = 10;
 
-        private double _lastCloudY = 0;
+        private GameObject _landedCloud;
 
         #endregion
 
@@ -199,39 +199,41 @@ namespace CandyCrazeGame
 
         private void PopulateGameView()
         {
-            // add some clouds
-            //for (int i = 0; i < 10; i++)
-            //{
-            //    SpawnCloud();
-            //}
-
             // add some collectibles
             for (int i = 0; i < 10; i++)
             {
                 SpawnCollectible();
             }
 
+            for (int i = 0; i < 5; i++)
+            {
+                Cloud cloud = new(_scale);
+
+                cloud.Speed = _gameSpeed + _random.Next(1, 3);
+
+                _markNum = _random.Next(0, _clouds.Length);
+                cloud.SetContent(_clouds[_markNum]);
+
+                cloud.SetPosition(
+                  left: (GameView.Width / 2 - cloud.Width / 2) * _random.Next(-1, 3),
+                  top: (GameView.Height / 3 - cloud.Height / 2) * _random.Next(-1, 3));
+
+                cloud.SetZ(0);
+
+                GameView.Children.Add(cloud);
+            }
+
+            _landedCloud = GameView.Children.OfType<Cloud>().First();
+
             // add player
             _player = new Player(_scale);
 
             _player.SetPosition(
-                left: GameView.Width / 2 - _player.Width / 2,
-                top: GameView.Height / 3 - _player.Height / 2);
+                left: (_landedCloud.GetLeft() + _landedCloud.Width / 2) - _player.Width / 2,
+                top: (_landedCloud.GetTop() + _landedCloud.Height / 2) - _player.Height / 2);
 
             _player.SetZ(1);
             GameView.Children.Add(_player);
-
-            Cloud cloud = new(_scale);
-
-            _markNum = _random.Next(0, _clouds.Length);
-            cloud.SetContent(_clouds[_markNum]);
-
-            cloud.SetPosition(
-              left: GameView.Width / 2 - _player.Width / 2,
-              top: GameView.Height / 3 - _player.Height / 2);
-            cloud.SetZ(0);
-
-            GameView.Children.Add(cloud);
         }
 
         private void StartGame()
@@ -268,7 +270,6 @@ namespace CandyCrazeGame
             _idleDurationCounter = _idleDurationCounterDefault;
             _jumpEaseDurationCounter = _jumpEaseDurationCounterDefault;
 
-            _lastCloudY = 0;
             _cloudSpawnCounter = _cloudSpawnCounterDefault;
             _cloudCount = 0;
 
@@ -469,7 +470,7 @@ namespace CandyCrazeGame
             {
                 case PlayerState.Idle:
                     {
-                        _player.SetTop(_player.GetTop() + _gameSpeed);
+                        _player.SetTop(_player.GetTop() + _landedCloud.Speed);
 
                         _fallingEaseDurationCounter = 0;
                         _idleDurationCounter--;
@@ -501,14 +502,14 @@ namespace CandyCrazeGame
                         if (_pointerPosition.X < _playerHitBox.Left)
                         {
                             _player.SetJumpDirection(JumpDirection.Left);
-                            _player.SetLeft(_player.GetLeft() - _gameSpeed);
+                            _player.SetLeft(_player.GetLeft() - _gameSpeed * 1.2);
                         }
 
                         // move right
                         if (_pointerPosition.X > _playerHitBox.Right)
                         {
                             _player.SetJumpDirection(JumpDirection.Right);
-                            _player.SetLeft(_player.GetLeft() + _gameSpeed);
+                            _player.SetLeft(_player.GetLeft() + _gameSpeed * 1.2);
                         }
 
                         if (_jumpDurationCounter <= 0)
@@ -538,6 +539,7 @@ namespace CandyCrazeGame
                         {
                             //TODO: loose health
                             //TODO: respawn
+                            //TODO: animate health loss
 
                             _fallingEaseDurationCounter = 0;
                             _idleDurationCounter = _idleDurationCounterDefault;
@@ -561,6 +563,8 @@ namespace CandyCrazeGame
         private void SpawnCloud()
         {
             Cloud cloud = new(_scale);
+            cloud.Speed = _gameSpeed + _random.Next(1, 3);
+
             RecyleCloud(cloud);
             GameView.Children.Add(cloud);
             _cloudCount++;
@@ -568,7 +572,7 @@ namespace CandyCrazeGame
 
         private void UpdateCloud(GameObject cloud)
         {
-            cloud.SetTop(cloud.GetTop() + _gameSpeed);
+            cloud.SetTop(cloud.GetTop() + cloud.Speed);
 
             var cloudHitBox = cloud.GetPlatformHitBox();
 
@@ -576,6 +580,7 @@ namespace CandyCrazeGame
             {
                 if (_player.PlayerState == PlayerState.Falling && _playerHitBox.IntersectsWith(cloudHitBox))
                 {
+                    _landedCloud = cloud;
                     _idleDurationCounter = _idleDurationCounterDefault;
                     _player.SetState(PlayerState.Idle);
                 }
