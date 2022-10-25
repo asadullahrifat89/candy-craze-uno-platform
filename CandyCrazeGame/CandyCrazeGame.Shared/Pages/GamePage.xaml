@@ -171,5 +171,10 @@
         </StackPanel>
         <!--#endregion-->
 
+        <TextBlock
+            x:Name="GameElementsCount"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Top" />
+
     </Grid>
 </Page>

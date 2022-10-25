@@ -52,9 +52,9 @@ namespace CandyCrazeGame
         {
             var rect = new Rect(
               x: gameObject.GetLeft() + gameObject.Width / 4,
-              y: gameObject.GetTop() + gameObject.Height / 2,
+              y: gameObject.GetTop() + gameObject.Height - 10,
               width: gameObject.Width - gameObject.Width / 4,
-              height: gameObject.Height - gameObject.Height / 2);
+              height: 10);
 
             gameObject.SetHitBoxBorder(rect);
 
@@ -65,9 +65,9 @@ namespace CandyCrazeGame
         {
             var rect = new Rect(
               x: gameObject.GetLeft() + gameObject.Width / 4,
-              y: gameObject.GetTop() + gameObject.Height / 2,
+              y: gameObject.GetTop() + gameObject.Height - 15,
               width: gameObject.Width - gameObject.Width / 4,
-              height: gameObject.Height - gameObject.Height / 4);
+              height: gameObject.Height - 15);
 
             gameObject.SetHitBoxBorder(rect);
 

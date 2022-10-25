@@ -316,6 +316,8 @@ namespace CandyCrazeGame
                 if (_powerModeDurationCounter <= 0)
                     PowerDown();
             }
+
+            GameElementsCount.Text = GameView.Children.Count().ToString();
         }
 
         private void SpawnGameObjects()
@@ -499,14 +501,14 @@ namespace CandyCrazeGame
                         if (_pointerPosition.X < _playerHitBox.Left)
                         {
                             _player.SetJumpDirection(JumpDirection.Left);
-                            _player.SetLeft(_player.GetLeft() - _gameSpeed / 1.5);
+                            _player.SetLeft(_player.GetLeft() - _gameSpeed);
                         }
 
                         // move right
                         if (_pointerPosition.X > _playerHitBox.Right)
                         {
                             _player.SetJumpDirection(JumpDirection.Right);
-                            _player.SetLeft(_player.GetLeft() + _gameSpeed / 1.5);
+                            _player.SetLeft(_player.GetLeft() + _gameSpeed);
                         }
 
                         if (_jumpDurationCounter <= 0)
