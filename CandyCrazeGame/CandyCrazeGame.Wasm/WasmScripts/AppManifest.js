@@ -1,7 +1,7 @@
 ﻿var UnoAppManifest = {
 
-    splashScreenImage: "Assets/Images/logo_game.png",
-    splashScreenColor: "#f7b239",
+    splashScreenImage: "Assets/Images/logo_brand.png",
+    splashScreenColor: "White",
     displayName: "Candy-Craze"
 
 }
