@@ -1,0 +1,36 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32929.385
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "CandyCrazeGame.Shared", "CandyCrazeGame\CandyCrazeGame.Shared\CandyCrazeGame.Shared.shproj", "{6279C845-92F8-4333-AB99-3D213163593C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Platforms", "Platforms", "{12D7F44B-DEC1-4290-82EA-9FB0E05919C7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CandyCrazeGame.Wasm", "CandyCrazeGame\CandyCrazeGame.Wasm\CandyCrazeGame.Wasm.csproj", "{1A62C653-93AB-4647-8ADF-91C982BF8DED}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1A62C653-93AB-4647-8ADF-91C982BF8DED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1A62C653-93AB-4647-8ADF-91C982BF8DED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1A62C653-93AB-4647-8ADF-91C982BF8DED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1A62C653-93AB-4647-8ADF-91C982BF8DED}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{1A62C653-93AB-4647-8ADF-91C982BF8DED} = {12D7F44B-DEC1-4290-82EA-9FB0E05919C7}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {631367FA-6381-4564-91F0-6DF1420405FD}
+	EndGlobalSection
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		CandyCrazeGame\CandyCrazeGame.Shared\CandyCrazeGame.Shared.projitems*{1a62c653-93ab-4647-8adf-91c982bf8ded}*SharedItemsImports = 5
+		CandyCrazeGame\CandyCrazeGame.Shared\CandyCrazeGame.Shared.projitems*{6279c845-92f8-4333-ab99-3d213163593c}*SharedItemsImports = 13
+	EndGlobalSection
+EndGlobal
