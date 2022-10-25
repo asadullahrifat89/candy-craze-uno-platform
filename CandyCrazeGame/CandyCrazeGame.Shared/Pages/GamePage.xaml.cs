@@ -24,10 +24,10 @@ namespace CandyCrazeGame
         private readonly double _gameSpeedDefault = 5;
 
         private int _cloudCount;
-        private readonly int _cloudSpawnLimit = 15;
+        private readonly int _cloudSpawnLimit = 12;
         private int _cloudSpawnCounter;
         private readonly int _cloudSpawnCounterDefault = 20;
-        private readonly int _cloudMovementDirectionXFactor = 5;
+        private readonly int _cloudMovementDirectionXSpeedFactor = 5;
 
         private int _powerUpCount;
         private readonly int _powerUpSpawnLimit = 1;
@@ -524,10 +524,10 @@ namespace CandyCrazeGame
                             switch (inCloud.MovementDirectionX)
                             {
                                 case MovementDirectionX.Left:
-                                    _player.SetLeft(_player.GetLeft() - _landedCloud.Speed / _cloudMovementDirectionXFactor);
+                                    _player.SetLeft(_player.GetLeft() - _landedCloud.Speed / _cloudMovementDirectionXSpeedFactor);
                                     break;
                                 case MovementDirectionX.Right:
-                                    _player.SetLeft(_player.GetLeft() + _landedCloud.Speed / _cloudMovementDirectionXFactor);
+                                    _player.SetLeft(_player.GetLeft() + _landedCloud.Speed / _cloudMovementDirectionXSpeedFactor);
                                     break;
                                 default:
                                     break;
@@ -655,7 +655,7 @@ namespace CandyCrazeGame
         {
             Cloud cloud = new(_scale)
             {
-                Speed = _gameSpeed,
+                Speed = _gameSpeed / 1.75,
                 MovementDirectionX = (MovementDirectionX)_random.Next(0, Enum.GetNames<MovementDirectionX>().Length),
             };
 
@@ -673,10 +673,10 @@ namespace CandyCrazeGame
             switch (inCloud.MovementDirectionX)
             {
                 case MovementDirectionX.Left:
-                    cloud.SetLeft(cloud.GetLeft() - cloud.Speed / _cloudMovementDirectionXFactor);
+                    cloud.SetLeft(cloud.GetLeft() - cloud.Speed / _cloudMovementDirectionXSpeedFactor);
                     break;
                 case MovementDirectionX.Right:
-                    cloud.SetLeft(cloud.GetLeft() + cloud.Speed / _cloudMovementDirectionXFactor);
+                    cloud.SetLeft(cloud.GetLeft() + cloud.Speed / _cloudMovementDirectionXSpeedFactor);
                     break;
                 default:
                     break;
@@ -703,6 +703,8 @@ namespace CandyCrazeGame
         {
             _markNum = _random.Next(0, _clouds.Length);
             cloud.SetContent(_clouds[_markNum]);
+            cloud.Speed = _gameSpeed / 1.75;
+
             RandomizeCloudPosition(cloud);
         }
 
@@ -710,7 +712,6 @@ namespace CandyCrazeGame
         {
             cloud.SetPosition(
                 left: _random.Next((int)(50 * _scale), (int)(GameView.Width - (50 * _scale))),
-                //top: _random.Next(100 * (int)_scale, (int)GameView.Height) * -1);
                 top: (int)GameView.Height / 4 * -1);
         }
 
