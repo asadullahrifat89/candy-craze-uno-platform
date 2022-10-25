@@ -212,8 +212,6 @@ namespace CandyCrazeGame
 
             _player.SetZ(1);
             GameView.Children.Add(_player);
-
-            _playerHitBox = _player.GetHitBox();
         }
 
         private void StartGame()
@@ -257,7 +255,9 @@ namespace CandyCrazeGame
 
             RunGame();
 
-            _player.SetSize(width: Constants.PLAYER_SIZE * _scale, height: Constants.PLAYER_SIZE * _scale);
+            _player.SetSize(
+                width: Constants.PLAYER_WIDTH * _scale,
+                height: Constants.PLAYER_HEIGHT * _scale);
         }
 
         private async void RunGame()
@@ -272,7 +272,7 @@ namespace CandyCrazeGame
 
         private void GameViewLoop()
         {
-            _playerHitBox = _player.GetHitBox();
+            _playerHitBox = _player.GetPlatformHitBox();
 
             SpawnGameObjects();
             UpdateGameObjects();
@@ -447,12 +447,12 @@ namespace CandyCrazeGame
 
                         if (_playerHitBox.Top > 0)
                         {
-                            if (_jumpDurationCounter <= 30)
+                            if (_jumpDurationCounter <= _jumpDurationCounterDefault / 2)
                             {
                                 if (_jumpEaseDurationCounter > 0)
                                     _jumpEaseDurationCounter -= 0.1;
 
-                                _player.SetTop(_player.GetTop() - _gameSpeed + _jumpEaseDurationCounter);
+                                _player.SetTop(_player.GetTop() - (_gameSpeed + _jumpEaseDurationCounter));
                             }
                             else
                             {
@@ -755,7 +755,9 @@ namespace CandyCrazeGame
 
             if (_player is not null)
             {
-                _player.SetSize(width: Constants.PLAYER_SIZE * _scale, height: Constants.PLAYER_SIZE * _scale);
+                _player.SetSize(
+                    width: Constants.PLAYER_WIDTH * _scale,
+                    height: Constants.PLAYER_HEIGHT * _scale);
             }
         }
 

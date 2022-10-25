@@ -12,8 +12,8 @@ namespace CandyCrazeGame
         {
             Tag = ElementType.PLAYER;
 
-            Width = Constants.PLAYER_SIZE * scale;
-            Height = Constants.PLAYER_SIZE * scale;
+            Width = Constants.PLAYER_WIDTH * scale;
+            Height = Constants.PLAYER_HEIGHT * scale;
 
             SetContent(Constants.ELEMENT_TEMPLATES.FirstOrDefault(x => x.Key is ElementType.PLAYER).Value);
         }

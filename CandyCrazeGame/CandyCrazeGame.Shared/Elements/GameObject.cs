@@ -1,4 +1,5 @@
-﻿using Microsoft.UI.Xaml.Controls;
+﻿using Microsoft.UI;
+using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
 using System;
@@ -21,7 +22,12 @@ namespace CandyCrazeGame
             ScaleY = 1,
         };
 
-        //private Border _hitBoxborder;
+
+        #region HitBox Debug
+
+        private Border _hitBoxborder; 
+
+        #endregion
 
         #endregion
 
@@ -37,7 +43,7 @@ namespace CandyCrazeGame
 
         public GameObject()
         {
-            Child = _content;
+            //Child = _content;
             RenderTransformOrigin = new Point(0.5, 0.5);
 
             RenderTransform = _compositeTransform;
@@ -45,25 +51,24 @@ namespace CandyCrazeGame
 
             #region HitBox Debug
 
-            //BorderThickness = new Microsoft.UI.Xaml.Thickness(1);
-            //BorderBrush = new SolidColorBrush(Colors.Black);
+            BorderThickness = new Microsoft.UI.Xaml.Thickness(1);
+            BorderBrush = new SolidColorBrush(Colors.Black);
 
-            //_hitBoxborder = new Border()
-            //{
-            //    BorderThickness = new Microsoft.UI.Xaml.Thickness(1),
-            //    BorderBrush = new SolidColorBrush(Colors.Black)
-            //};
+            _hitBoxborder = new Border()
+            {
+                BorderThickness = new Microsoft.UI.Xaml.Thickness(1),
+                BorderBrush = new SolidColorBrush(Colors.Black)
+            };
 
+            var grid = new Grid()
+            {
+                HorizontalAlignment = Microsoft.UI.Xaml.HorizontalAlignment.Center,
+                VerticalAlignment = Microsoft.UI.Xaml.VerticalAlignment.Center
+            };
 
-            //var grid = new Grid()
-            //{
-            //    HorizontalAlignment = Microsoft.UI.Xaml.HorizontalAlignment.Center,
-            //    VerticalAlignment = Microsoft.UI.Xaml.VerticalAlignment.Center
-            //};
-
-            //grid.Children.Add(_hitBoxborder);
-            //grid.Children.Add(_content);
-            //Child = grid;
+            grid.Children.Add(_hitBoxborder);
+            grid.Children.Add(_content);
+            Child = grid;
 
             #endregion
         }
@@ -122,8 +127,8 @@ namespace CandyCrazeGame
 
         public void SetHitBoxBorder(Rect rect)
         {
-            //_hitBoxborder.Height = rect.Height;
-            //_hitBoxborder.Width = rect.Width;
+            _hitBoxborder.Height = rect.Height;
+            _hitBoxborder.Width = rect.Width;
         }
 
         public void SetScaleTransform(double scaleTransform)

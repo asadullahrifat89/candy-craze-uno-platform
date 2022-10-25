@@ -8,8 +8,8 @@
         {
             Tag = ElementType.CLOUD;
 
-            Height = Constants.CLOUD_SIZE * scale;
-            Width = Constants.CLOUD_SIZE * scale;
+            Height = Constants.CLOUD_HEIGHT * scale;
+            Width = Constants.CLOUD_WIDTH * scale;
         }
 
         #endregion

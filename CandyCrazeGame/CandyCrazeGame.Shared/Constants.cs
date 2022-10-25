@@ -11,13 +11,14 @@ namespace CandyCrazeGame
 
         public const double DEFAULT_FRAME_TIME = 18;
 
-        public const double PLAYER_SIZE = 100;
-        public const double PLAYER_TRAIL_SIZE = 80;
+        public const double PLAYER_HEIGHT = 100;
+        public const double PLAYER_WIDTH = 70;
 
         public const double COLLECTIBLE_SIZE = 80;
         public const double POWERUP_SIZE = 80;
 
-        public const double CLOUD_SIZE = 140;        
+        public const double CLOUD_WIDTH = 140;
+        public const double CLOUD_HEIGHT = 120;
 
         public const double HEALTH_WIDTH = 80;
         public const double HEALTH_HEIGHT = 80;

@@ -51,10 +51,10 @@ namespace CandyCrazeGame
         public static Rect GetPlatformHitBox(this GameObject gameObject)
         {
             var rect = new Rect(
-              x: gameObject.GetLeft(),
+              x: gameObject.GetLeft() + gameObject.Width / 4,
               y: gameObject.GetTop() + gameObject.Height / 2,
-              width: gameObject.Width,
-              height: gameObject.Height);
+              width: gameObject.Width - gameObject.Width / 4,
+              height: gameObject.Height - ((gameObject.Height / 2) + 10));
 
             gameObject.SetHitBoxBorder(rect);
 
