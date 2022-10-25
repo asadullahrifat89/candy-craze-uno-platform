@@ -9,10 +9,16 @@ namespace CandyCrazeGame
             Tag = ElementType.POWERUP;
 
             Width = Constants.POWERUP_SIZE * scale;
-            Height = Constants.POWERUP_SIZE * scale;            
-
-            SetContent(Constants.ELEMENT_TEMPLATES.FirstOrDefault(x => x.Key == ElementType.POWERUP).Value);
+            Height = Constants.POWERUP_SIZE * scale;
         }
+
+        public PowerUpType PowerUpType { get; set; }
+    }
+
+    public enum PowerUpType
+    {
+        Magnet,
+        Rocket,
     }
 }
 

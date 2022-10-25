@@ -43,6 +43,9 @@ namespace CandyCrazeGame
                 case PlayerState.Falling:
                     SetContent(Constants.ELEMENT_TEMPLATES.FirstOrDefault(x => x.Key is ElementType.PLAYER_FALL).Value);
                     break;
+                case PlayerState.Flying:
+                    SetContent(Constants.ELEMENT_TEMPLATES.FirstOrDefault(x => x.Key is ElementType.PLAYER_FLY).Value);
+                    break;
                 default:
                     break;
             }
@@ -70,7 +73,8 @@ namespace CandyCrazeGame
     {
         Idle,
         Jumping,
-        Falling
+        Falling,
+        Flying
     }
 
     public enum MovementDirectionY

@@ -155,6 +155,7 @@ namespace CandyCrazeGame
         PLAYER,
         PLAYER_JUMP,
         PLAYER_FALL,
+        PLAYER_FLY,
         POWERUP,
         HEALTH,
         COLLECTIBLE,

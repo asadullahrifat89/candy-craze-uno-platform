@@ -30,9 +30,9 @@ namespace CandyCrazeGame
 
         private int _powerUpCount;
         private readonly int _powerUpSpawnLimit = 1;
-        private int _powerUpSpawnCounter = 800;
+        private int _powerUpSpawnCounter = 600;
         private int _powerModeDurationCounter;
-        private readonly int _powerModeDuration = 800;
+        private readonly int _powerModeDuration = 1000;
 
         private double _score;
         private double _scoreCap;
@@ -54,6 +54,9 @@ namespace CandyCrazeGame
 
         private Uri[] _clouds;
         private Uri[] _collectibles;
+        private Uri[] _powerUps;
+
+        private PowerUpType _powerUpType;
 
         private double _playerHealth;
         private int _damageRecoveryOpacityFrameSkip;
@@ -193,6 +196,7 @@ namespace CandyCrazeGame
         {
             _clouds = Constants.ELEMENT_TEMPLATES.Where(x => x.Key == ElementType.CLOUD).Select(x => x.Value).ToArray();
             _collectibles = Constants.ELEMENT_TEMPLATES.Where(x => x.Key == ElementType.COLLECTIBLE).Select(x => x.Value).ToArray();
+            _powerUps = Constants.ELEMENT_TEMPLATES.Where(x => x.Key == ElementType.POWERUP).Select(x => x.Value).ToArray();
         }
 
         private void PopulateGameViews()
@@ -307,9 +311,8 @@ namespace CandyCrazeGame
                 if (_powerModeDurationCounter <= 0)
                     PowerDown();
             }
-
 #if DEBUG
-            GameElementsCount.Text = GameView.Children.Count.ToString(); 
+            GameElementsCount.Text = GameView.Children.Count.ToString();
 #endif
         }
 
@@ -322,7 +325,7 @@ namespace CandyCrazeGame
                 if (_powerUpSpawnCounter < 1)
                 {
                     SpawnPowerUp();
-                    _powerUpSpawnCounter = _random.Next(1000, 1200);
+                    _powerUpSpawnCounter = _random.Next(600, 1000);
                 }
             }
 
@@ -478,78 +481,110 @@ namespace CandyCrazeGame
                 }
             }
 
-            switch (_player.PlayerState)
+            if (_isPowerMode && _powerUpType == PowerUpType.Rocket)
             {
-                case PlayerState.Idle:
-                    {
-                        _player.SetTop(_player.GetTop() + _landedCloud.Speed);
+                double effectiveSpeed = _gameSpeed;
 
-                        if (_playerHitBox.Top > _windowHeight / 4)
+                double left = _player.GetLeft();
+                double top = _player.GetTop();
+
+                double playerMiddleX = left + _player.Width / 2;
+                double playerMiddleY = top + _player.Height / 2;
+
+                if (_isPointerActivated)
+                {
+                    // move up
+                    if (_pointerPosition.Y < playerMiddleY - effectiveSpeed)
+                        _player.SetTop(top - effectiveSpeed);
+
+                    // move left
+                    if (_pointerPosition.X < playerMiddleX - effectiveSpeed && left > 0)
+                        _player.SetLeft(left - effectiveSpeed);
+
+                    // move down
+                    if (_pointerPosition.Y > playerMiddleY + effectiveSpeed)
+                        _player.SetTop(top + effectiveSpeed * 2);
+
+                    // move right
+                    if (_pointerPosition.X > playerMiddleX + effectiveSpeed && left + _player.Width < GameView.Width)
+                        _player.SetLeft(left + effectiveSpeed);
+                }
+            }
+            else
+            {
+                switch (_player.PlayerState)
+                {
+                    case PlayerState.Idle:
                         {
-                            _fallingEaseDurationCounter = 0;
-                            _idleDurationCounter--;
+                            _player.SetTop(_player.GetTop() + _landedCloud.Speed);
 
-                            if (_idleDurationCounter <= 0)
+                            if (_playerHitBox.Top > _windowHeight / 4)
                             {
-                                SoundHelper.PlaySound(SoundType.JUMP);
-                                _player.SetState(PlayerState.Jumping);
-                                _idleDurationCounter = _idleDurationCounterDefault;
+                                _fallingEaseDurationCounter = 0;
+                                _idleDurationCounter--;
+
+                                if (_idleDurationCounter <= 0)
+                                {
+                                    SoundHelper.PlaySound(SoundType.JUMP);
+                                    _player.SetState(PlayerState.Jumping);
+                                    _idleDurationCounter = _idleDurationCounterDefault;
+                                }
                             }
                         }
-                    }
-                    break;
-                case PlayerState.Jumping:
-                    {
-                        _jumpDurationCounter--;
-
-                        if (_playerHitBox.Top > 0)
-                            MovePlayerY(MovementDirectionY.Up);
-
-                        // move left
-                        if (_pointerPosition.X < _playerHitBox.Left)
-                            MovePlayerX(MovementDirectionX.Left);
-
-                        // move right
-                        if (_pointerPosition.X > _playerHitBox.Right)
-                            MovePlayerX(MovementDirectionX.Right);
-
-                        if (_jumpDurationCounter <= 0)
+                        break;
+                    case PlayerState.Jumping:
                         {
-                            _jumpingEaseDurationCounter = _jumpEaseDurationCounterDefault;
-                            _jumpDurationCounter = _jumpDurationCounterDefault;
-                            _player.SetState(PlayerState.Falling);
+                            _jumpDurationCounter--;
+
+                            if (_playerHitBox.Top > 0)
+                                MovePlayerY(MovementDirectionY.Up);
+
+                            // move left
+                            if (_pointerPosition.X < _playerHitBox.Left)
+                                MovePlayerX(MovementDirectionX.Left);
+
+                            // move right
+                            if (_pointerPosition.X > _playerHitBox.Right)
+                                MovePlayerX(MovementDirectionX.Right);
+
+                            if (_jumpDurationCounter <= 0)
+                            {
+                                _jumpingEaseDurationCounter = _jumpEaseDurationCounterDefault;
+                                _jumpDurationCounter = _jumpDurationCounterDefault;
+                                _player.SetState(PlayerState.Falling);
+                            }
                         }
-                    }
-                    break;
-                case PlayerState.Falling:
-                    {
-                        MovePlayerY(MovementDirectionY.Down);
-
-                        if (_pointerPosition.X < _playerHitBox.Left)
-                            MovePlayerX(MovementDirectionX.Left);
-
-                        if (_pointerPosition.X > _playerHitBox.Right)
-                            MovePlayerX(MovementDirectionX.Right);
-
-                        if (_playerHitBox.Top > _windowHeight)
+                        break;
+                    case PlayerState.Falling:
                         {
-                            //TODO: loose health
-                            LooseHealth(20);
+                            MovePlayerY(MovementDirectionY.Down);
 
-                            //TODO: animate health loss
+                            if (_pointerPosition.X < _playerHitBox.Left)
+                                MovePlayerX(MovementDirectionX.Left);
 
-                            _fallingEaseDurationCounter = 0;
-                            _idleDurationCounter = _idleDurationCounterDefault;
+                            if (_pointerPosition.X > _playerHitBox.Right)
+                                MovePlayerX(MovementDirectionX.Right);
 
-                            _player.SetState(PlayerState.Falling);
-                            _player.SetPosition(
-                                  left: GameView.Width / 2 - _player.Width / 2,
-                                  top: 0 + _player.Height / 2);
+                            if (_playerHitBox.Top > _windowHeight)
+                            {
+                                //TODO: loose health
+                                LooseHealth(20);
+
+                                //TODO: animate health loss
+
+                                _fallingEaseDurationCounter = 0;
+                                _idleDurationCounter = _idleDurationCounterDefault;
+
+                                _player.SetState(PlayerState.Falling);
+                                _player.SetPosition(
+                                      left: GameView.Width / 2 - _player.Width / 2,
+                                      top: 0 + _player.Height / 2);
+                            }
                         }
-                    }
-                    break;
-                default:
-                    break;
+                        break;
+                    default:
+                        break;
+                }
             }
         }
 
@@ -669,8 +704,8 @@ namespace CandyCrazeGame
                 Collectible(collectible);
             else
             {
-                // in power mode draw the collectible closer
-                if (_isPowerMode)
+                // if magnet power up received then pull collectibles to player
+                if (_isPowerMode && _powerUpType == PowerUpType.Magnet)
                     MagnetPull(collectible);
 
                 if (collectible.GetTop() > GameView.Height)
@@ -733,6 +768,12 @@ namespace CandyCrazeGame
         private void SpawnPowerUp()
         {
             PowerUp powerUp = new(_scale);
+
+            var powerUpTypes = Enum.GetNames<PowerUpType>();
+            powerUp.PowerUpType = (PowerUpType)_random.Next(0, powerUpTypes.Length);
+
+            powerUp.SetContent(_powerUps[(int)powerUp.PowerUpType]);
+
             RandomizePowerUpPosition(powerUp);
             GameView.Children.Add(powerUp);
         }
@@ -751,7 +792,7 @@ namespace CandyCrazeGame
             if (_playerHitBox.IntersectsWith(powerUp.GetHitBox()))
             {
                 GameView.AddDestroyableGameObject(powerUp);
-                PowerUp(powerUp);
+                PowerUp(powerUp as PowerUp);
             }
             else
             {
@@ -760,11 +801,23 @@ namespace CandyCrazeGame
             }
         }
 
-        private void PowerUp(GameObject powerUp)
+        private void PowerUp(PowerUp powerUp)
         {
             _isPowerMode = true;
             _powerModeDurationCounter = _powerModeDuration;
             _powerUpCount++;
+            _powerUpType = powerUp.PowerUpType;
+
+            // if rocket power up received then change player to ufo
+            if (_powerUpType == PowerUpType.Rocket)
+            {
+                _player.SetSize(
+                  width: 256 * _scale,
+                  height: 256 * _scale);
+
+                _player.SetState(PlayerState.Flying);
+                SoundHelper.PlaySound(SoundType.SPACESHIP_FLIGHT);
+            }
 
             powerUpText.Visibility = Visibility.Visible;
             SoundHelper.PlaySound(SoundType.POWER_UP);
@@ -787,6 +840,17 @@ namespace CandyCrazeGame
         {
             _isPowerMode = false;
             _powerUpCount--;
+
+            // if was in rocket mode set to falling mode
+            if (_powerUpType == PowerUpType.Rocket)
+            {
+                _player.SetSize(
+                   width: Constants.PLAYER_WIDTH * _scale,
+                   height: Constants.PLAYER_HEIGHT * _scale);
+
+                _player.SetState(PlayerState.Falling);
+                SoundHelper.StopSound(SoundType.SPACESHIP_FLIGHT);
+            }
 
             powerUpText.Visibility = Visibility.Collapsed;
             SoundHelper.PlaySound(SoundType.POWER_DOWN);

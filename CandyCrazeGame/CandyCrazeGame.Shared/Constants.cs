@@ -32,8 +32,10 @@ namespace CandyCrazeGame
             new KeyValuePair<ElementType, Uri>(ElementType.PLAYER, new Uri("ms-appx:///Assets/Images/player_idle.png")),
             new KeyValuePair<ElementType, Uri>(ElementType.PLAYER_JUMP, new Uri("ms-appx:///Assets/Images/player_jump.png")),
             new KeyValuePair<ElementType, Uri>(ElementType.PLAYER_FALL, new Uri("ms-appx:///Assets/Images/player_fall.png")),
+            new KeyValuePair<ElementType, Uri>(ElementType.PLAYER_FLY, new Uri("ms-appx:///Assets/Images/player_fly.png")),
 
-            new KeyValuePair<ElementType, Uri>(ElementType.POWERUP, new Uri("ms-appx:///Assets/Images/powerup.png")),
+            new KeyValuePair<ElementType, Uri>(ElementType.POWERUP, new Uri("ms-appx:///Assets/Images/powerup1.png")),
+            new KeyValuePair<ElementType, Uri>(ElementType.POWERUP, new Uri("ms-appx:///Assets/Images/powerup2.png")),
 
             new KeyValuePair<ElementType, Uri>(ElementType.CLOUD, new Uri("ms-appx:///Assets/Images/cloud1.png")),
             new KeyValuePair<ElementType, Uri>(ElementType.CLOUD, new Uri("ms-appx:///Assets/Images/cloud2.png")),
@@ -67,6 +69,8 @@ namespace CandyCrazeGame
 
             new KeyValuePair<SoundType, string>(SoundType.POWER_UP, "Assets/Sounds/power-up.mp3"),
             new KeyValuePair<SoundType, string>(SoundType.POWER_DOWN, "Assets/Sounds/power-down.mp3"),
+
+            new KeyValuePair<SoundType, string>(SoundType.SPACESHIP_FLIGHT, "Assets/Sounds/spaceship_flight.mp3"),
 
             new KeyValuePair<SoundType, string>(SoundType.JUMP, "Assets/Sounds/jump.mp3"),
 

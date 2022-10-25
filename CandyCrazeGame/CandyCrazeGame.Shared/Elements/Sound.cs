@@ -68,6 +68,7 @@
         POWER_DOWN,
         JUMP,
         COLLECTIBLE,
-        HEALTH_LOSS
+        HEALTH_LOSS,
+        SPACESHIP_FLIGHT,
     }
 }
