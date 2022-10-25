@@ -174,7 +174,9 @@
         <TextBlock
             x:Name="GameElementsCount"
             HorizontalAlignment="Center"
-            VerticalAlignment="Top" />
+            VerticalAlignment="Top"
+            FontSize="20"
+            FontWeight="SemiBold" />
 
     </Grid>
 </Page>

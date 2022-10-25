@@ -308,7 +308,9 @@ namespace CandyCrazeGame
                     PowerDown();
             }
 
-            GameElementsCount.Text = GameView.Children.Count().ToString();
+#if DEBUG
+            GameElementsCount.Text = GameView.Children.Count.ToString(); 
+#endif
         }
 
         private void SpawnGameObjects()
