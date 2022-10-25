@@ -6,39 +6,41 @@ namespace CandyCrazeGame
 {
     public class Player : GameObject
     {
-        #region Fields
-
-
-
-        #endregion
-
         #region Ctor
 
         public Player(double scale)
         {
-            Tag = ElementType.PLAYER_IDLE;
+            Tag = ElementType.PLAYER;
 
             Width = Constants.PLAYER_SIZE * scale;
             Height = Constants.PLAYER_SIZE * scale;
 
-            SetContent(Constants.ELEMENT_TEMPLATES.FirstOrDefault(x => x.Key is ElementType.PLAYER_IDLE).Value);
+            SetContent(Constants.ELEMENT_TEMPLATES.FirstOrDefault(x => x.Key is ElementType.PLAYER).Value);
         }
+
+        #endregion
+
+        #region Properties
+
+        public PlayerState PlayerState { get; set; } = PlayerState.Idle;
 
         #endregion
 
         #region Methods
 
-        public void SetPose(PlayerPose playerPose)
+        public void SetState(PlayerState playerState)
         {
-            switch (playerPose)
+            PlayerState = playerState;
+
+            switch (playerState)
             {
-                case PlayerPose.Idle:
-                    SetContent(Constants.ELEMENT_TEMPLATES.FirstOrDefault(x => x.Key is ElementType.PLAYER_IDLE).Value);
+                case PlayerState.Idle:
+                    SetContent(Constants.ELEMENT_TEMPLATES.FirstOrDefault(x => x.Key is ElementType.PLAYER).Value);
                     break;
-                case PlayerPose.Jumping:
+                case PlayerState.Jumping:
                     SetContent(Constants.ELEMENT_TEMPLATES.FirstOrDefault(x => x.Key is ElementType.PLAYER_JUMP).Value);
                     break;
-                case PlayerPose.Falling:
+                case PlayerState.Falling:
                     SetContent(Constants.ELEMENT_TEMPLATES.FirstOrDefault(x => x.Key is ElementType.PLAYER_FALL).Value);
                     break;
                 default:
@@ -64,7 +66,7 @@ namespace CandyCrazeGame
         #endregion
     }
 
-    public enum PlayerPose
+    public enum PlayerState
     {
         Idle,
         Jumping,

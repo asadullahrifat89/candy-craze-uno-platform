@@ -178,9 +178,7 @@ namespace CandyCrazeGame
                     SetLoginContext();
                 }
                 else
-                {
                     SetLogoutContext();
-                }
             }
             else
             {
@@ -319,15 +317,11 @@ namespace CandyCrazeGame
         {
             // add some clouds
             for (int i = 0; i < 15; i++)
-            {
                 SpawnCloud();
-            }
 
             // add some collectibles
             for (int i = 0; i < 10; i++)
-            {
                 SpawnCollectible();
-            }
         }
 
         private void StartAnimation()
@@ -346,14 +340,10 @@ namespace CandyCrazeGame
                 switch ((ElementType)x.Tag)
                 {
                     case ElementType.COLLECTIBLE:
-                        {
-                            RecyleCollectible(x);
-                        }
+                        RecyleCollectible(x);
                         break;
                     case ElementType.CLOUD:
-                        {
-                            RecyleCloud(x);
-                        }
+                        RecyleCloud(x);
                         break;
                     default:
                         break;
@@ -366,9 +356,7 @@ namespace CandyCrazeGame
             _gameViewTimer = new PeriodicTimer(_frameTime);
 
             while (await _gameViewTimer.WaitForNextTickAsync())
-            {
                 GameViewLoop();
-            }
         }
 
         private void GameViewLoop()
@@ -383,14 +371,10 @@ namespace CandyCrazeGame
                 switch ((ElementType)x.Tag)
                 {
                     case ElementType.CLOUD:
-                        {
-                            UpdateCloud(x);
-                        }
+                        UpdateCloud(x);
                         break;
                     case ElementType.COLLECTIBLE:
-                        {
-                            UpdateCollectible(x);
-                        }
+                        UpdateCollectible(x);
                         break;
                     default:
                         break;
@@ -418,9 +402,7 @@ namespace CandyCrazeGame
             cloud.SetTop(cloud.GetTop() + _gameSpeed);
 
             if (cloud.GetTop() > UnderView.Height)
-            {
                 RecyleCloud(cloud);
-            }
         }
 
         private void RecyleCloud(GameObject cloud)
@@ -454,9 +436,7 @@ namespace CandyCrazeGame
             collectible.SetTop(collectible.GetTop() + _gameSpeed);
 
             if (collectible.GetTop() > UnderView.Height)
-            {
                 RecyleCollectible(collectible);
-            }
         }
 
         private void RecyleCollectible(GameObject collectible)

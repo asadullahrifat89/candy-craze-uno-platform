@@ -28,7 +28,7 @@ namespace CandyCrazeGame
 
         public static KeyValuePair<ElementType, Uri>[] ELEMENT_TEMPLATES = new KeyValuePair<ElementType, Uri>[]
         {
-            new KeyValuePair<ElementType, Uri>(ElementType.PLAYER_IDLE, new Uri("ms-appx:///Assets/Images/player_idle.png")),
+            new KeyValuePair<ElementType, Uri>(ElementType.PLAYER, new Uri("ms-appx:///Assets/Images/player_idle.png")),
             new KeyValuePair<ElementType, Uri>(ElementType.PLAYER_JUMP, new Uri("ms-appx:///Assets/Images/player_jump.png")),
             new KeyValuePair<ElementType, Uri>(ElementType.PLAYER_FALL, new Uri("ms-appx:///Assets/Images/player_fall.png")),
 

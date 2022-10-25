@@ -4,6 +4,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using System;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading;
 using Windows.Foundation;
 
@@ -45,9 +46,6 @@ namespace CandyCrazeGame
         private Player _player;
         private Rect _playerHitBox;
 
-        private int _collectibleSpawnCounter;
-        private int _collectibleSpawnLimit;
-        private int _collectibleCount;
         private int _collectibleCollected;
 
         private Uri[] _clouds;
@@ -55,8 +53,13 @@ namespace CandyCrazeGame
 
         private double _playerHealth;
 
-        private readonly double _healthDepletePointDefault = 0.5;
-        private readonly double _healthGainPointDefault = 10;
+        private int _jumpDurationCounter = 50;
+        private int _jumpDurationCounterDefault = 50;
+
+        private int _idleDurationCounter = 20;
+        private int _idleDurationCounterDefault = 20;
+
+        private double _jumpEaseDurationCounter = 1;
 
         #endregion
 
@@ -167,6 +170,8 @@ namespace CandyCrazeGame
 
         #region Methods
 
+        #region Animation
+
         #region Game
 
         private void LoadGameElements()
@@ -219,9 +224,6 @@ namespace CandyCrazeGame
             HideInGameTextMessage();
             SoundHelper.PlaySound(SoundType.MENU_SELECT);
 
-            _collectibleSpawnLimit = 2;
-            _collectibleCount = 0;
-
             _gameSpeed = _gameSpeedDefault;
             _player.Opacity = 1;
 
@@ -270,7 +272,33 @@ namespace CandyCrazeGame
 
         private void GameViewLoop()
         {
+            _playerHitBox = _player.GetHitBox();
+
+            SpawnGameObjects();
             UpdateGameObjects();
+
+            RemoveGameObjects();
+
+            if (_isPowerMode)
+            {
+                PowerUpCoolDown();
+                if (_powerModeDurationCounter <= 0)
+                    PowerDown();
+            }
+        }
+
+        private void SpawnGameObjects()
+        {
+            if (_powerUpCount < _powerUpSpawnLimit)
+            {
+                _powerUpSpawnCounter--;
+
+                if (_powerUpSpawnCounter < 1)
+                {
+                    SpawnPowerUp();
+                    _powerUpSpawnCounter = _random.Next(1000, 1200);
+                }
+            }
         }
 
         private void UpdateGameObjects()
@@ -287,6 +315,16 @@ namespace CandyCrazeGame
                     case ElementType.COLLECTIBLE:
                         {
                             UpdateCollectible(x);
+                        }
+                        break;
+                    case ElementType.POWERUP:
+                        {
+                            UpdatePowerUp(x);
+                        }
+                        break;
+                    case ElementType.PLAYER:
+                        {
+                            UpdatePlayer();
                         }
                         break;
                     default:
@@ -377,6 +415,108 @@ namespace CandyCrazeGame
 
         #endregion
 
+        #region Player
+
+        private double _fallingEaseDurationCounter = 0;
+
+        private void UpdatePlayer()
+        {
+            switch (_player.PlayerState)
+            {
+                case PlayerState.Idle:
+                    {
+                        //TODO: init jump
+                        _fallingEaseDurationCounter = 0;
+                        _idleDurationCounter--;
+
+                        _player.SetTop(_player.GetTop() + _gameSpeed);
+
+                        if (_idleDurationCounter <= 0)
+                        {
+                            SoundHelper.PlaySound(SoundType.JUMP);
+                            _player.SetState(PlayerState.Jumping);
+                            _idleDurationCounter = _idleDurationCounterDefault;
+                        }
+                    }
+                    break;
+                case PlayerState.Jumping:
+                    {
+                        //TODO: change state to jumping and count cool down
+
+                        _jumpDurationCounter--;
+
+                        if (_playerHitBox.Top > 0)
+                        {
+                            if (_jumpDurationCounter <= 30)
+                            {
+                                if (_jumpEaseDurationCounter > 0)
+                                    _jumpEaseDurationCounter -= 0.1;
+
+                                _player.SetTop(_player.GetTop() - _gameSpeed + _jumpEaseDurationCounter);
+                            }
+                            else
+                            {
+                                _player.SetTop(_player.GetTop() - _gameSpeed * 1.75);
+                            }
+                        }
+
+                        if (_pointerPosition.X < _playerHitBox.Left)
+                        {
+                            _player.SetJumpDirection(JumpDirection.Left);
+                            _player.SetLeft(_player.GetLeft() - _gameSpeed / 2);
+                        }
+
+                        if (_pointerPosition.X > _playerHitBox.Right)
+                        {
+                            _player.SetJumpDirection(JumpDirection.Right);
+                            _player.SetLeft(_player.GetLeft() + _gameSpeed / 2);
+                        }
+
+                        if (_jumpDurationCounter <= 0)
+                        {
+                            _jumpEaseDurationCounter = 1;
+                            _jumpDurationCounter = _jumpDurationCounterDefault;
+                            _player.SetState(PlayerState.Falling);
+                        }
+
+                    }
+                    break;
+                case PlayerState.Falling:
+                    {
+                        //TODO: change state to falling and land on a cloud
+
+                        _fallingEaseDurationCounter += 0.3;
+
+                        _player.SetTop(_player.GetTop() + (_gameSpeed + _fallingEaseDurationCounter));
+
+                        if (_pointerPosition.X < _playerHitBox.Left)
+                            _player.SetLeft(_player.GetLeft() - _gameSpeed);
+
+                        if (_pointerPosition.X > _playerHitBox.Right)
+                            _player.SetLeft(_player.GetLeft() + _gameSpeed);
+
+                        if (_playerHitBox.Top > _windowHeight)
+                        {
+                            //TODO: loose health
+                            //TODO: respawn
+
+                            _fallingEaseDurationCounter = 0;
+                            _idleDurationCounter = _idleDurationCounterDefault;
+
+                            _player.SetState(PlayerState.Falling);
+                            _player.SetPosition(
+                                  left: GameView.Width / 2 - _player.Width / 2,
+                                  top: 0 + _player.Height / 2);
+                        }
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        #endregion
+
         #region Cloud
 
         private void SpawnCloud()
@@ -389,10 +529,14 @@ namespace CandyCrazeGame
         {
             cloud.SetTop(cloud.GetTop() + _gameSpeed);
 
-            if (cloud.GetTop() > GameView.Height)
+            if (_player.PlayerState == PlayerState.Falling && _playerHitBox.IntersectsWith(cloud.GetPlatformHitBox()))
             {
-                RecyleCloud(cloud);
+                _idleDurationCounter = _idleDurationCounterDefault;
+                _player.SetState(PlayerState.Idle);
             }
+
+            if (cloud.GetTop() > GameView.Height)
+                RecyleCloud(cloud);
         }
 
         private void RecyleCloud(GameObject cloud)
@@ -425,9 +569,16 @@ namespace CandyCrazeGame
         {
             collectible.SetTop(collectible.GetTop() + _gameSpeed);
 
-            if (collectible.GetTop() > GameView.Height)
+            if (_playerHitBox.IntersectsWith(collectible.GetHitBox()))
+                Collectible(collectible);
+            else
             {
-                RecyleCollectible(collectible);
+                // in power mode draw the collectible closer
+                if (_isPowerMode)
+                    MagnetPull(collectible);
+
+                if (collectible.GetTop() > GameView.Height)
+                    RecyleCollectible(collectible);
             }
         }
 
@@ -444,6 +595,107 @@ namespace CandyCrazeGame
                 left: _random.Next(0, (int)GameView.Width) - (100 * _scale),
                 top: _random.Next(100 * (int)_scale, (int)GameView.Height) * -1);
         }
+
+        private void MagnetPull(GameObject collectible)
+        {
+            var playerHitBoxDistant = _player.GetDistantHitBox();
+            var collectibleHitBoxDistant = collectible.GetDistantHitBox();
+
+            if (playerHitBoxDistant.IntersectsWith(collectibleHitBoxDistant))
+            {
+                var collectibleHitBox = collectible.GetHitBox();
+
+                if (_playerHitBox.Left < collectibleHitBox.Left)
+                    collectible.SetLeft(collectible.GetLeft() - _gameSpeed * 1.5);
+
+                if (collectibleHitBox.Right < _playerHitBox.Left)
+                    collectible.SetLeft(collectible.GetLeft() + _gameSpeed * 1.5);
+
+                if (collectibleHitBox.Top > _playerHitBox.Bottom)
+                    collectible.SetTop(collectible.GetTop() - _gameSpeed * 1.5);
+
+                if (collectibleHitBox.Bottom < _playerHitBox.Top)
+                    collectible.SetTop(collectible.GetTop() + _gameSpeed * 1.5);
+            }
+        }
+
+        private void Collectible(GameObject collectible)
+        {
+            SoundHelper.PlayRandomSound(SoundType.COLLECTIBLE);
+
+            AddScore(5);
+            RecyleCollectible(collectible);
+
+            _collectibleCollected++;
+        }
+
+        #endregion
+
+        #region PowerUp
+
+        private void SpawnPowerUp()
+        {
+            PowerUp powerUp = new(_scale);
+            RandomizePowerUpPosition(powerUp);
+            GameView.Children.Add(powerUp);
+        }
+
+        private void RandomizePowerUpPosition(GameObject powerUp)
+        {
+            powerUp.SetPosition(
+                left: _random.Next(0, (int)GameView.Width) - (100 * _scale),
+                top: _random.Next(100 * (int)_scale, (int)GameView.Height) * -1);
+        }
+
+        private void UpdatePowerUp(GameObject powerUp)
+        {
+            powerUp.SetTop(powerUp.GetTop() + _gameSpeed);
+
+            if (_playerHitBox.IntersectsWith(powerUp.GetHitBox()))
+            {
+                GameView.AddDestroyableGameObject(powerUp);
+                PowerUp(powerUp);
+            }
+            else
+            {
+                if (powerUp.GetTop() > GameView.Height)
+                    RecyleCollectible(powerUp);
+            }
+        }
+
+        private void PowerUp(GameObject powerUp)
+        {
+            _isPowerMode = true;
+            _powerModeDurationCounter = _powerModeDuration;
+            _powerUpCount++;
+
+            powerUpText.Visibility = Visibility.Visible;
+            SoundHelper.PlaySound(SoundType.POWER_UP);
+        }
+
+        private void PowerUpCoolDown()
+        {
+            _powerModeDurationCounter -= 1;
+            double remainingPow = (double)_powerModeDurationCounter / (double)_powerModeDuration * 4;
+
+            powerUpText.Text = "";
+
+            for (int i = 0; i < remainingPow; i++)
+            {
+                powerUpText.Text += "⚡";
+            }
+        }
+
+        private void PowerDown()
+        {
+            _isPowerMode = false;
+            _powerUpCount--;
+
+            powerUpText.Visibility = Visibility.Collapsed;
+            SoundHelper.PlaySound(SoundType.POWER_DOWN);
+        }
+
+        #endregion
 
         #endregion
 

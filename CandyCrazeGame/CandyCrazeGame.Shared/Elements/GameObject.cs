@@ -143,7 +143,7 @@ namespace CandyCrazeGame
     public enum ElementType
     {
         NONE,
-        PLAYER_IDLE,
+        PLAYER,
         PLAYER_JUMP,
         PLAYER_FALL,
         POWERUP,
