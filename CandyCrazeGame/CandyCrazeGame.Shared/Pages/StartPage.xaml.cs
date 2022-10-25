@@ -317,13 +317,13 @@ namespace CandyCrazeGame
 
         private void PopulateUnderView()
         {
-            // add some clouds underneath
+            // add some clouds
             for (int i = 0; i < 15; i++)
             {
                 SpawnCloud();
             }
 
-            // add some clouds underneath
+            // add some collectibles
             for (int i = 0; i < 10; i++)
             {
                 SpawnCollectible();
@@ -449,13 +449,13 @@ namespace CandyCrazeGame
             UnderView.Children.Add(collectible);
         }
 
-        private void UpdateCollectible(GameObject Collectible)
+        private void UpdateCollectible(GameObject collectible)
         {
-            Collectible.SetTop(Collectible.GetTop() + _gameSpeed);
+            collectible.SetTop(collectible.GetTop() + _gameSpeed);
 
-            if (Collectible.GetTop() > UnderView.Height)
+            if (collectible.GetTop() > UnderView.Height)
             {
-                RecyleCollectible(Collectible);
+                RecyleCollectible(collectible);
             }
         }
 
@@ -466,9 +466,9 @@ namespace CandyCrazeGame
             RandomizeCollectiblePosition(collectible);
         }
 
-        private void RandomizeCollectiblePosition(GameObject Collectible)
+        private void RandomizeCollectiblePosition(GameObject collectible)
         {
-            Collectible.SetPosition(
+            collectible.SetPosition(
                 left: _random.Next(0, (int)UnderView.Width) - (100 * _scale),
                 top: _random.Next(100 * (int)_scale, (int)UnderView.Height) * -1);
         }
