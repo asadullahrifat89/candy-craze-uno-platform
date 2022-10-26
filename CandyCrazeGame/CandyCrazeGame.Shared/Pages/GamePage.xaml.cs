@@ -664,37 +664,42 @@ namespace CandyCrazeGame
         {
             cloud.SetTop(cloud.GetTop() + cloud.Speed);
 
-            var inCloud = cloud as Cloud;
-
-            switch (inCloud.MovementDirectionX)
+            // only move the cloud side ways when it has entered the view port
+            if (cloud.GetTop() + cloud.Height > 10)
             {
-                case MovementDirectionX.Left:
-                    cloud.SetLeft(cloud.GetLeft() - cloud.Speed / (_cloudMovementDirectionXSpeedDivider * _scale));
-                    break;
-                case MovementDirectionX.Right:
-                    cloud.SetLeft(cloud.GetLeft() + cloud.Speed / (_cloudMovementDirectionXSpeedDivider * _scale));
-                    break;
-                default:
-                    break;
-            }
+                var inCloud = cloud as Cloud;
 
-            var cloudHitBox = cloud.GetPlatformHitBox(_scale);
-
-            // only land on a cloud if it's almost in the middle
-            if (_playerHitBox.Top > _windowHeight / 3)
-            {
-                if (_player.PlayerState == PlayerState.Falling && _playerHitBox.IntersectsWith(cloudHitBox))
+                switch (inCloud.MovementDirectionX)
                 {
-                    _landedCloud = cloud;
-                    _idleDurationCounter = _idleDurationCounterDefault;
-                    _player.SetState(PlayerState.Idle);
+                    case MovementDirectionX.Left:
+                        cloud.SetLeft(cloud.GetLeft() - cloud.Speed / (_cloudMovementDirectionXSpeedDivider * _scale));
+                        break;
+                    case MovementDirectionX.Right:
+                        cloud.SetLeft(cloud.GetLeft() + cloud.Speed / (_cloudMovementDirectionXSpeedDivider * _scale));
+                        break;
+                    default:
+                        break;
                 }
-            }
 
-            if (cloud.GetTop() > GameView.Height)
-            {
-                GameView.AddDestroyableGameObject(cloud);
-                _cloudCount--;
+                var cloudHitBox = cloud.GetPlatformHitBox(_scale);
+
+                // only land on a cloud if it's almost in the middle
+                if (_playerHitBox.Top > _windowHeight / 3)
+                {
+                    if (_player.PlayerState == PlayerState.Falling && _playerHitBox.IntersectsWith(cloudHitBox))
+                    {
+                        _landedCloud = cloud;
+                        _idleDurationCounter = _idleDurationCounterDefault;
+                        _player.SetState(PlayerState.Idle);
+                    }
+                }
+
+                if (cloud.GetTop() > GameView.Height)
+                {
+                    RecyleCloud(cloud as Cloud);
+                    //GameView.AddDestroyableGameObject(cloud);
+                    //_cloudCount--;
+                }
             }
         }
 
@@ -709,11 +714,11 @@ namespace CandyCrazeGame
             RandomizeCloudPosition(cloud);
         }
 
-        private void RandomizeCloudPosition(GameObject cloud, int distance = -1)
+        private void RandomizeCloudPosition(GameObject cloud)
         {
             cloud.SetPosition(
                 left: _random.Next((int)(50 * _scale), (int)(GameView.Width - (50 * _scale))),
-                top: (int)GameView.Height / 2 * distance);
+                top: (int)GameView.Height * -1);
         }
 
         #endregion
