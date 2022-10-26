@@ -4,7 +4,6 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using System;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Threading;
 using Windows.Foundation;
 
