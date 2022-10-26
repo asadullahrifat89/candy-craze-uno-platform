@@ -484,8 +484,6 @@ namespace CandyCrazeGame
 
             if (_isPowerMode && _powerUpType == PowerUpType.Rocket)
             {
-                double effectiveSpeed = _gameSpeed;
-
                 double left = _player.GetLeft();
                 double top = _player.GetTop();
 
@@ -495,20 +493,20 @@ namespace CandyCrazeGame
                 if (_isPointerActivated)
                 {
                     // move up
-                    if (_pointerPosition.Y < playerMiddleY - effectiveSpeed)
-                        _player.SetTop(top - effectiveSpeed);
+                    if (_pointerPosition.Y < playerMiddleY - _gameSpeed)
+                        _player.SetTop(top - _gameSpeed);
 
                     // move left
-                    if (_pointerPosition.X < playerMiddleX - effectiveSpeed && left > 0)
-                        _player.SetLeft(left - effectiveSpeed);
+                    if (_pointerPosition.X < playerMiddleX - _gameSpeed)
+                        _player.SetLeft(left - _gameSpeed);
 
                     // move down
-                    if (_pointerPosition.Y > playerMiddleY + effectiveSpeed)
-                        _player.SetTop(top + effectiveSpeed * 2);
+                    if (_pointerPosition.Y > playerMiddleY + _gameSpeed)
+                        _player.SetTop(top + _gameSpeed * 2);
 
                     // move right
-                    if (_pointerPosition.X > playerMiddleX + effectiveSpeed && left + _player.Width < GameView.Width)
-                        _player.SetLeft(left + effectiveSpeed);
+                    if (_pointerPosition.X > playerMiddleX + _gameSpeed)
+                        _player.SetLeft(left + _gameSpeed);
                 }
             }
             else
