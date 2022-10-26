@@ -519,18 +519,22 @@ namespace CandyCrazeGame
                         {
                             _player.SetTop(_player.GetTop() + _landedCloud.Speed);
 
-                            var inCloud = _landedCloud as Cloud;
-
-                            switch (inCloud.MovementDirectionX)
+                            // only move the player with cloud when in view port
+                            if (_landedCloud.GetTop() + _landedCloud.Height > 10)
                             {
-                                case MovementDirectionX.Left:
-                                    _player.SetLeft(_player.GetLeft() - _landedCloud.Speed / (_cloudMovementDirectionXSpeedDivider * _scale));
-                                    break;
-                                case MovementDirectionX.Right:
-                                    _player.SetLeft(_player.GetLeft() + _landedCloud.Speed / (_cloudMovementDirectionXSpeedDivider * _scale));
-                                    break;
-                                default:
-                                    break;
+                                var inCloud = _landedCloud as Cloud;
+
+                                switch (inCloud.MovementDirectionX)
+                                {
+                                    case MovementDirectionX.Left:
+                                        _player.SetLeft(_player.GetLeft() - _landedCloud.Speed / (_cloudMovementDirectionXSpeedDivider * _scale));
+                                        break;
+                                    case MovementDirectionX.Right:
+                                        _player.SetLeft(_player.GetLeft() + _landedCloud.Speed / (_cloudMovementDirectionXSpeedDivider * _scale));
+                                        break;
+                                    default:
+                                        break;
+                                }
                             }
 
                             if (_playerHitBox.Top > _windowHeight / 4)
@@ -545,6 +549,7 @@ namespace CandyCrazeGame
                                     _idleDurationCounter = _idleDurationCounterDefault;
                                 }
                             }
+
                         }
                         break;
                     case PlayerState.Jumping:
@@ -664,7 +669,7 @@ namespace CandyCrazeGame
         {
             cloud.SetTop(cloud.GetTop() + cloud.Speed);
 
-            // only move the cloud side ways when it has entered the view port
+            // only move the cloud side ways when in view port
             if (cloud.GetTop() + cloud.Height > 10)
             {
                 var inCloud = cloud as Cloud;
@@ -683,7 +688,7 @@ namespace CandyCrazeGame
 
                 var cloudHitBox = cloud.GetPlatformHitBox(_scale);
 
-                // only land on a cloud if it's almost in the middle
+                // only land on a cloud when it's on a suitable height in viewport
                 if (_playerHitBox.Top > _windowHeight / 3)
                 {
                     if (_player.PlayerState == PlayerState.Falling && _playerHitBox.IntersectsWith(cloudHitBox))
