@@ -35,6 +35,13 @@ namespace CandyCrazeGame
             return false;
         }
 
+        public static void PlaceRelativeToCloud(this GameObject gameObject, Cloud landedCloud)
+        {
+            gameObject.SetPosition(
+                 left: (landedCloud.GetLeft() + landedCloud.Width / 2) - gameObject.Width / 2,
+                 top: (landedCloud.GetTop() + landedCloud.Height / 2) - gameObject.Height);
+        }
+
         public static Rect GetHitBox(this GameObject gameObject)
         {
             var rect = new Rect(
@@ -63,9 +70,9 @@ namespace CandyCrazeGame
         {
             var rect = new Rect(
               x: gameObject.GetLeft() + gameObject.Width / 4,
-              y: gameObject.GetTop() + gameObject.Height - 15 * scale,
+              y: gameObject.GetTop() + gameObject.Height - 18 * scale,
               width: gameObject.Width - gameObject.Width / 4,
-              height: gameObject.Height - 15 * scale);
+              height: gameObject.Height - 18 * scale);
 
             gameObject.SetHitBoxBorder(rect);
             return rect;

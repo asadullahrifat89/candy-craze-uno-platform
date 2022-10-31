@@ -68,8 +68,8 @@ namespace CandyCrazeGame
             _systemNavigationManager = SystemNavigationManager.GetForCurrentView();
 
             _goBackNotAllowedToPages = new List<Type>() { typeof(GamePage) };
-            //TODO: fix if going back to
-            _goBackPageRoutes = new List<(Type IfGoingBackTo, Type RouteTo)>() { /*(IfGoingBackTo: typeof(GameOverPage), RouteTo: typeof(StartPage))*/ };
+
+            _goBackPageRoutes = new List<(Type IfGoingBackTo, Type RouteTo)>() { (IfGoingBackTo: typeof(GameOverPage), RouteTo: typeof(StartPage)) };
 
             LocalizationHelper.CurrentCulture = "en";
         }

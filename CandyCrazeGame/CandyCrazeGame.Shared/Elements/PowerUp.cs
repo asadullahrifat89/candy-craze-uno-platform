@@ -17,8 +17,8 @@ namespace CandyCrazeGame
 
     public enum PowerUpType
     {
-        Magnet,
-        Rocket,
+        MagnetPull,
+        CloudRide,
     }
 }
 

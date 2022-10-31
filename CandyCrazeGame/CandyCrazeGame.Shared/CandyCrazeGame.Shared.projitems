@@ -21,6 +21,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Constants.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Elements\Cloud.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Elements\Collectible.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Elements\Enemy.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Elements\GameEnvironment.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Elements\GameObject.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Elements\Player.cs" />
@@ -30,6 +31,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\HttpServiceExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\PageExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\StringExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Pages\GameOverPage.xaml.cs">
+      <DependentUpon>GameOverPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Pages\GamePage.xaml.cs">
       <DependentUpon>GamePage.xaml</DependentUpon>
     </Compile>
@@ -58,6 +62,18 @@
     <Compile Include="$(MSBuildThisFileDirectory)Models\Responses\QueryRecordResponse.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\Responses\QueryRecordsResponse.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\Responses\ServiceResponse.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Pages\HowToPlayPage.xaml.cs">
+      <DependentUpon>HowToPlayPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Pages\LeaderboardPage.xaml.cs">
+      <DependentUpon>LeaderboardPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Pages\LoginPage.xaml.cs">
+      <DependentUpon>LoginPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Pages\SignUpPage.xaml.cs">
+      <DependentUpon>SignUpPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Pages\StartPage.xaml.cs">
       <DependentUpon>StartPage.xaml</DependentUpon>
     </Compile>
@@ -71,7 +87,27 @@
     <Compile Include="$(MSBuildThisFileDirectory)Services\Implementations\HttpService.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="$(MSBuildThisFileDirectory)Pages\GameOverPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="$(MSBuildThisFileDirectory)Pages\GamePage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)Pages\HowToPlayPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)Pages\LeaderboardPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)Pages\LoginPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)Pages\SignUpPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -92,6 +128,14 @@
 		 explicitly included in the projitem, so files can be added from vscode
 		 without manipulating the projitem file.
 	-->
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Images\enemy1.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Images\enemy1_attack.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Images\enemy2.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Images\enemy2_attack.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Images\enemy3.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Images\enemy3_attack.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Images\logo_welcome.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Images\game_over.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Images\cloud1.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Images\cloud2.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Images\cloud3.png" />
@@ -116,16 +160,16 @@
     <Content Include="$(MSBuildThisFileDirectory)Assets\Sounds\background2.mp3" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Sounds\intro2.mp3" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Sounds\intro1.mp3" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Sounds\game-over.mp3" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Sounds\power-down.mp3" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Sounds\power-up.mp3" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Sounds\jump.mp3" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Sounds\food-bite1.mp3" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Sounds\food-bite2.mp3" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Sounds\food-bite3.mp3" />
-    <Content Include="$(MSBuildThisFileDirectory)Assets\Sounds\game-over.mp3" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Sounds\menu-select.mp3" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Sounds\health_loss.mp3" />
-    <Content Include="$(MSBuildThisFileDirectory)Assets\Sounds\spaceship_flight.mp3" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Sounds\player_yay.mp3" />
     <_Globbled_Page Include="$(MSBuildThisFileDirectory)**/*.xaml" Exclude="@(Page);@(ApplicationDefinition)">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

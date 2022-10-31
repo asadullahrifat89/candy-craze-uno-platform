@@ -11,11 +11,15 @@ namespace CandyCrazeGame
 
         public const double DEFAULT_FRAME_TIME = 18;
 
-        public const double PLAYER_HEIGHT = 100;
-        public const double PLAYER_WIDTH = 70;
+        public const double PLAYER_WIDTH = 80;
+        public const double PLAYER_HEIGHT = 80;
 
-        public const double COLLECTIBLE_SIZE = 50;
-        public const double POWERUP_SIZE = 50;
+        public const double ENEMY_WIDTH = 90;
+        public const double ENEMY_HEIGHT = 85;
+
+        public const double COLLECTIBLE_SIZE = 70;
+
+        public const double POWERUP_SIZE = 70;
 
         public const double CLOUD_WIDTH = 150;
         public const double CLOUD_HEIGHT = 100;
@@ -33,6 +37,14 @@ namespace CandyCrazeGame
             new KeyValuePair<ElementType, Uri>(ElementType.PLAYER_JUMP, new Uri("ms-appx:///Assets/Images/player_jump.png")),
             new KeyValuePair<ElementType, Uri>(ElementType.PLAYER_FALL, new Uri("ms-appx:///Assets/Images/player_fall.png")),
             new KeyValuePair<ElementType, Uri>(ElementType.PLAYER_FLY, new Uri("ms-appx:///Assets/Images/player_fly.png")),
+
+            new KeyValuePair<ElementType, Uri>(ElementType.ENEMY, new Uri("ms-appx:///Assets/Images/enemy1.png")),
+            new KeyValuePair<ElementType, Uri>(ElementType.ENEMY, new Uri("ms-appx:///Assets/Images/enemy2.png")),
+            new KeyValuePair<ElementType, Uri>(ElementType.ENEMY, new Uri("ms-appx:///Assets/Images/enemy3.png")),
+
+            new KeyValuePair<ElementType, Uri>(ElementType.ENEMY_ATTACK, new Uri("ms-appx:///Assets/Images/enemy1_attack.png")),
+            new KeyValuePair<ElementType, Uri>(ElementType.ENEMY_ATTACK, new Uri("ms-appx:///Assets/Images/enemy2_attack.png")),
+            new KeyValuePair<ElementType, Uri>(ElementType.ENEMY_ATTACK, new Uri("ms-appx:///Assets/Images/enemy3_attack.png")),
 
             new KeyValuePair<ElementType, Uri>(ElementType.POWERUP, new Uri("ms-appx:///Assets/Images/powerup1.png")),
             new KeyValuePair<ElementType, Uri>(ElementType.POWERUP, new Uri("ms-appx:///Assets/Images/powerup2.png")),
@@ -70,9 +82,9 @@ namespace CandyCrazeGame
             new KeyValuePair<SoundType, string>(SoundType.POWER_UP, "Assets/Sounds/power-up.mp3"),
             new KeyValuePair<SoundType, string>(SoundType.POWER_DOWN, "Assets/Sounds/power-down.mp3"),
 
-            new KeyValuePair<SoundType, string>(SoundType.SPACESHIP_FLIGHT, "Assets/Sounds/spaceship_flight.mp3"),
+            new KeyValuePair<SoundType, string>(SoundType.PLAYER_YAY, "Assets/Sounds/player_yay.mp3"),
 
-            new KeyValuePair<SoundType, string>(SoundType.JUMP, "Assets/Sounds/jump.mp3"),
+            new KeyValuePair<SoundType, string>(SoundType.PLAYER_JUMP, "Assets/Sounds/jump.mp3"),
 
             new KeyValuePair<SoundType, string>(SoundType.COLLECTIBLE, "Assets/Sounds/food-bite1.mp3"),
             new KeyValuePair<SoundType, string>(SoundType.COLLECTIBLE, "Assets/Sounds/food-bite2.mp3"),
@@ -87,7 +99,7 @@ namespace CandyCrazeGame
 #if DEBUG
         public const string GAME_API_BASEURL = "https://localhost:7238";
 #else
-        public const string GAME_API_BASEURL = "https://selise-space-shooter-backend.seliselocal.com";
+        public const string GAME_API_BASEURL = "https://astro-odyssey-web-api.herokuapp.com";
 #endif
         #endregion
 

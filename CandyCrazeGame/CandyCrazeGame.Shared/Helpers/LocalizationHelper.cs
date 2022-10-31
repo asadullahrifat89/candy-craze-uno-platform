@@ -41,7 +41,7 @@ namespace CandyCrazeGame
 
                 ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
                 localSettings.Values["LOCALIZATION_KEYS"] = _localizationJson;
-                Console.WriteLine("Localization Keys Count:" + LOCALIZATION_KEYS?.Length);
+                Console.WriteLine("LOCALIZATION KEYS COUNT:" + LOCALIZATION_KEYS?.Length);
 
                 completed?.Invoke();                
             }

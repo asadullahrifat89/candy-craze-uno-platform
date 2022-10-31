@@ -66,9 +66,9 @@
         GAME_OVER,
         POWER_UP,
         POWER_DOWN,
-        JUMP,
+        PLAYER_JUMP,
+        PLAYER_YAY,
         COLLECTIBLE,
         HEALTH_LOSS,
-        SPACESHIP_FLIGHT,
     }
 }

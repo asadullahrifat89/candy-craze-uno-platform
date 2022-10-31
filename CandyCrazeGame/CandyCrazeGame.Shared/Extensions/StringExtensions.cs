@@ -10,12 +10,13 @@ namespace CandyCrazeGame
     {
         private static readonly string encryptionKey1 = "ASDWU&*^%JHJOOI)()^&HJ*^*^&KLJ:KLHJH";
         private static readonly string encryptionKey2 = "IYUHKJ(*&(*%^*GKHJGJHRTU%*^(*&YHOUIH";
+        private static readonly DateTime DateSeed = DateTime.Parse("2013/01/01");
 
-        /// <summary>
-        /// Checks if the provided string is null or empty or white space.
-        /// </summary>
-        /// <param name="value"></param>
-        /// <returns></returns>
+        static public string GetUid(int prefix = 1)
+        {
+            return ((long)(DateTime.UtcNow - DateSeed).TotalMilliseconds + (prefix * 100000000000)).ToString();
+        }
+
         public static bool IsNullOrBlank(this string value)
         {
             return string.IsNullOrEmpty(value) || string.IsNullOrWhiteSpace(value);
@@ -72,11 +73,6 @@ namespace CandyCrazeGame
             return (true, "PASSWORD_IS_STRONG");
         }
 
-        /// <summary>
-        /// Get initials from a given name.
-        /// </summary>
-        /// <param name="name"></param>
-        /// <returns></returns>
         public static string GetInitials(string name)
         {
             string[] nameSplit = name.Split(new string[] { ",", ".", " " }, StringSplitOptions.RemoveEmptyEntries);

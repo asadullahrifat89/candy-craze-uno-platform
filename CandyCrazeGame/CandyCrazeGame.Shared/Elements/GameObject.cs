@@ -22,7 +22,6 @@ namespace CandyCrazeGame
             ScaleY = 1,
         };
 
-
         #region HitBox Debug
 
         //private Border _hitBoxborder;
@@ -33,6 +32,8 @@ namespace CandyCrazeGame
 
         #region Properties
 
+        public string Uid { get; set; }
+
         public double Speed { get; set; }
 
         #endregion
@@ -41,6 +42,8 @@ namespace CandyCrazeGame
 
         public GameObject()
         {
+            Uid = StringExtensions.GetUid();
+
             RenderTransformOrigin = new Point(0.5, 0.5);
 
             RenderTransform = _compositeTransform;
@@ -156,5 +159,7 @@ namespace CandyCrazeGame
         HEALTH,
         COLLECTIBLE,
         CLOUD,
+        ENEMY,
+        ENEMY_ATTACK,
     }
 }

@@ -4,8 +4,10 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using System;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading;
 using Windows.Foundation;
+using Windows.System;
 
 namespace CandyCrazeGame
 {
@@ -19,25 +21,50 @@ namespace CandyCrazeGame
         private readonly Random _random = new();
         private int _markNum;
 
-        private double _gameSpeed = 5;
+        private double _gameSpeed;
         private readonly double _gameSpeedDefault = 5;
 
         private int _cloudCount;
         private readonly int _cloudSpawnLimit = 15;
+
         private double _cloudSpawnCounter;
-        private double _cloudSpawnCounterDefault = 40;
+        private readonly double _cloudSpawnCounterDefault = 60;
+
         private readonly int _cloudMovementDirectionXSpeedDivider = 8;
-        private readonly double _cloudSpeedFactor = 0.9;
+        private readonly double _cloudSpeedFactor = 0.8;
+
+        private int _landedCloudEffectCounter;
+        private readonly int _landedCloudEffectCounterDefault = 5;
+
+        private bool _landedCloudEffectActive;
+        private readonly double _cloudFlightPlayerScaleModifier = 1.3;
+
+        private bool _landedCloudEffectReverseActive;
+        private int _landedCloudEffectReverseCounter;
+        private readonly int _landedCloudEffectReverseCounterDefault = 5;
 
         private int _powerUpCount;
         private readonly int _powerUpSpawnLimit = 1;
+
         private int _powerUpSpawnCounter = 600;
+
         private int _powerModeDurationCounter;
         private readonly int _powerModeDuration = 1000;
+
+        private double _enemySpawnCounter;
+        private readonly double _enemySpawnCounterDefault = 240;
+
+        private int _enemyCount;
+        private readonly int _enemySpawnLimit = 3;
 
         private double _score;
         private double _scoreCap;
         private double _difficultyMultiplier;
+
+        private bool _moveLeft;
+        private bool _moveRight;
+        private bool _moveUp;
+        private bool _moveDown;
 
         private bool _isGameOver;
         private bool _isPowerMode;
@@ -50,36 +77,41 @@ namespace CandyCrazeGame
 
         private Player _player;
         private Rect _playerHitBox;
+        private Rect _playerStandingHitBox;
+        private Rect _playerPlatformHitBox;
+        private Rect _playerDistantHitBox;
 
         private int _collectibleCollected;
 
         private Uri[] _clouds;
         private Uri[] _collectibles;
         private Uri[] _powerUps;
+        private Uri[] _enemies;
 
         private PowerUpType _powerUpType;
 
         private double _playerHealth;
-        private int _damageRecoveryOpacityFrameSkip;
-        private int _damageRecoveryCounter = 100;
-        private readonly int _damageRecoveryDelay = 400;
         private int _playerHealthLossPoints;
 
-        private bool _isRecoveringFromDamage;
+        private int _damageRecoveryOpacityFrameSkip;
+        private int _damageRecoveryCounter = 300;
+        private readonly int _damageRecoveryDelay = 300;
+
+        private readonly double _playerMovementSpeedMultiplier = 1.2;
+
+        private bool _isPlayerRecoveringFromDamage;
 
         private double _jumpDurationCounter;
-        private double _jumpDurationCounterDefault;
-        private readonly double _airborneDuration = 40;
+        private readonly double _jumpDurationCounterDefault = 40;
 
         private int _idleDurationCounter;
         private readonly int _idleDurationCounterDefault = 20;
 
-        private double _jumpingEaseDurationCounter;
-        private readonly double _jumpEaseDurationCounterDefault = 5;
+        private double _jumpingEaseCounter;
+        private readonly double _jumpEaseCounterDefault = 5;
 
-        private double _fallingEaseDurationCounter = 0;
-
-        private GameObject _landedCloud;
+        private double _fallingEaseCounter = 0;
+        private readonly double _fallingEaseCounterDefault = 0;
 
         #endregion
 
@@ -165,6 +197,51 @@ namespace CandyCrazeGame
             _isPointerActivated = false;
         }
 
+        private void OnKeyDown(object sender, KeyRoutedEventArgs e)
+        {
+            if (e.Key == VirtualKey.Left)
+            {
+                _moveLeft = true;
+                _moveRight = false;
+            }
+            if (e.Key == VirtualKey.Right)
+            {
+                _moveRight = true;
+                _moveLeft = false;
+            }
+            if (e.Key == VirtualKey.Up)
+            {
+                _moveUp = true;
+                _moveDown = false;
+            }
+            if (e.Key == VirtualKey.Down)
+            {
+                _moveDown = true;
+                _moveUp = false;
+            }
+        }
+
+        private void OnKeyUP(object sender, KeyRoutedEventArgs e)
+        {
+            // when the player releases the left or right key it will set the designated boolean to false
+            if (e.Key == VirtualKey.Left)
+            {
+                _moveLeft = false;
+            }
+            if (e.Key == VirtualKey.Right)
+            {
+                _moveRight = false;
+            }
+            if (e.Key == VirtualKey.Up)
+            {
+                _moveUp = false;
+            }
+            if (e.Key == VirtualKey.Down)
+            {
+                _moveDown = false;
+            }
+        }
+
         #endregion
 
         #region Button
@@ -199,6 +276,7 @@ namespace CandyCrazeGame
             _clouds = Constants.ELEMENT_TEMPLATES.Where(x => x.Key == ElementType.CLOUD).Select(x => x.Value).ToArray();
             _collectibles = Constants.ELEMENT_TEMPLATES.Where(x => x.Key == ElementType.COLLECTIBLE).Select(x => x.Value).ToArray();
             _powerUps = Constants.ELEMENT_TEMPLATES.Where(x => x.Key == ElementType.POWERUP).Select(x => x.Value).ToArray();
+            _enemies = Constants.ELEMENT_TEMPLATES.Where(x => x.Key == ElementType.ENEMY).Select(x => x.Value).ToArray();
         }
 
         private void PopulateGameViews()
@@ -212,25 +290,11 @@ namespace CandyCrazeGame
 
         private void PopulateGameView()
         {
-            SpawnCloud();
-
-            _landedCloud = GameView.Children.OfType<Cloud>().First();
-
             // add some collectibles
             for (int i = 0; i < 10; i++)
             {
                 SpawnCollectible();
             }
-
-            // add player
-            _player = new Player(_scale);
-
-            _player.SetPosition(
-                left: (_landedCloud.GetLeft() + _landedCloud.Width / 2) - _player.Width / 2,
-                top: (_landedCloud.GetTop() + _landedCloud.Height / 2) - _player.Height);
-
-            _player.SetZ(1);
-            GameView.Children.Add(_player);
         }
 
         private void StartGame()
@@ -241,8 +305,7 @@ namespace CandyCrazeGame
             HideInGameTextMessage();
             SoundHelper.PlaySound(SoundType.MENU_SELECT);
 
-            _gameSpeed = _gameSpeedDefault;
-            _player.Opacity = 1;
+            _gameSpeed = _gameSpeedDefault * _scale;
 
             ResetControls();
 
@@ -253,24 +316,25 @@ namespace CandyCrazeGame
             _powerUpCount = 0;
 
             _score = 0;
-            _scoreCap = 30;
+            _scoreCap = 50;
             _difficultyMultiplier = 1;
 
             _collectibleCollected = 0;
             ScoreText.Text = "0";
 
-            PlayerHealthBarPanel.Visibility = Visibility.Visible;
-
             _playerHealth = 100;
             _playerHealthLossPoints = 20;
 
-            _jumpDurationCounterDefault = _airborneDuration * _scale;
+            PlayerHealthBarPanel.Visibility = Visibility.Visible;
+
             _jumpDurationCounter = _jumpDurationCounterDefault;
             _idleDurationCounter = _idleDurationCounterDefault;
-            _jumpingEaseDurationCounter = _jumpEaseDurationCounterDefault;
 
-            _cloudSpawnCounterDefault = 40;
+            _jumpingEaseCounter = _jumpEaseCounterDefault;
+            _fallingEaseCounter = _fallingEaseCounterDefault;
+
             _cloudSpawnCounter = _cloudSpawnCounterDefault;
+            _enemySpawnCounter = _enemySpawnCounterDefault;
 
             foreach (GameObject x in GameView.GetGameObjects<PowerUp>())
             {
@@ -281,11 +345,17 @@ namespace CandyCrazeGame
             RemoveGameObjects();
             StartGameSounds();
 
-            RunGame();
+            for (int i = 0; i < 6; i++)
+            {
+                SpawnCloud(multiplierY: i);
+            }
 
-            _player.SetSize(
-                width: Constants.PLAYER_WIDTH * _scale,
-                height: Constants.PLAYER_HEIGHT * _scale);
+            SpawnPlayer(GameView.GetGameObjects<Cloud>().First());
+
+            RunGame();
+#if DEBUG
+            Console.WriteLine($"GAME SPEED: {_gameSpeed}");
+#endif
         }
 
         private async void RunGame()
@@ -303,7 +373,10 @@ namespace CandyCrazeGame
             ScoreText.Text = _score.ToString("#");
             PlayerHealthBar.Value = _playerHealth;
 
-            _playerHitBox = _isPowerMode && _powerUpType == PowerUpType.Rocket ? _player.GetHitBox() : _player.GetStandingHitBox(_scale);
+            _playerHitBox = _player.GetHitBox();
+            _playerStandingHitBox = _player.GetStandingHitBox(_scale);
+            _playerPlatformHitBox = _player.GetPlatformHitBox(_scale);
+            _playerDistantHitBox = _player.GetDistantHitBox();
 
             SpawnGameObjects();
             UpdateGameObjects();
@@ -322,6 +395,11 @@ namespace CandyCrazeGame
 
         private void ResetControls()
         {
+            _moveLeft = false;
+            _moveRight = false;
+            _moveUp = false;
+            _moveDown = false;
+            _isPointerActivated = false;
             _pointerPosition = null;
         }
 
@@ -365,9 +443,7 @@ namespace CandyCrazeGame
 
             SoundHelper.PlaySound(SoundType.GAME_OVER);
 
-            //TODO: go to game over page
-            //NavigateToPage(typeof(GameOverPage));
-            NavigateToPage(typeof(StartPage));
+            NavigateToPage(typeof(GameOverPage));
         }
 
         #endregion
@@ -397,11 +473,26 @@ namespace CandyCrazeGame
                     _cloudSpawnCounter = _cloudSpawnCounterDefault;
                 }
             }
+
+            if (_enemyCount < _enemySpawnLimit)
+            {
+                _enemySpawnCounter--;
+
+                if (_enemySpawnCounter < 1)
+                {
+                    SpawnEnemy(GameView.GetGameObjects<Cloud>().Last());
+                    _enemySpawnCounter = _enemySpawnCounterDefault;
+                }
+            }
         }
 
         private void UpdateGameObjects()
         {
-            foreach (GameObject x in GameView.Children.OfType<GameObject>())
+            // do a bounce effect for the cloud on which the player just landed
+            if (_landedCloudEffectActive)
+                LandedCloudEffect();
+
+            foreach (GameObject x in GameView.GetGameObjects<GameObject>())
             {
                 switch ((ElementType)x.Tag)
                 {
@@ -425,10 +516,19 @@ namespace CandyCrazeGame
                             UpdatePlayer();
                         }
                         break;
+                    case ElementType.ENEMY:
+                        {
+                            UpdateEnemy(x as Enemy);
+                        }
+                        break;
                     default:
                         break;
                 }
             }
+
+            // do a bounce back effect for the cloud for which bounce effect was active
+            if (_landedCloudEffectReverseActive)
+                LandedCloudEffectReverse();
         }
 
         private void RemoveGameObjects()
@@ -438,7 +538,7 @@ namespace CandyCrazeGame
 
         private void RecycleGameObjects()
         {
-            foreach (GameObject x in GameView.Children.OfType<GameObject>())
+            foreach (GameObject x in GameView.GetGameObjects<GameObject>())
             {
                 switch ((ElementType)x.Tag)
                 {
@@ -457,56 +557,50 @@ namespace CandyCrazeGame
 
         #region Player
 
+        private void SpawnPlayer(Cloud cloud)
+        {
+            _player = new Player(_scale)
+            {
+                Opacity = 1
+            };
+
+            // place the player on a cloud
+            _player.PlaceOnCloud(cloud);
+            _player.SetZ(1);
+
+            GameView.Children.Add(_player);
+        }
+
+        private void ReSpawnPlayer()
+        {
+            // if fell outside the viewport, respawn from the top middle point
+            _fallingEaseCounter = _fallingEaseCounterDefault;
+            _idleDurationCounter = _idleDurationCounterDefault;
+
+            if (GameView.GetGameObjects<Cloud>().FirstOrDefault(x => x.GetTop() < 0) is Cloud cloud)
+            {
+                _player.SetState(PlayerState.Idle);
+                _player.PlaceOnCloud(cloud);
+            }
+            else
+            {
+                _player.SetState(PlayerState.Falling);
+                _player.SetPosition(
+                      left: GameView.Width / 2 - _player.Width / 2,
+                      top: _player.Height / 2);
+            }
+        }
+
         private void UpdatePlayer()
         {
-            if (_isRecoveringFromDamage)
+            // animate damange recovery
+            if (_isPlayerRecoveringFromDamage)
+                DamageRecovering();
+
+            // if rocket power up enabled move in any direction with pointer
+            if (_isPowerMode && _powerUpType == PowerUpType.CloudRide)
             {
-                _damageRecoveryOpacityFrameSkip--;
-                if (_damageRecoveryOpacityFrameSkip < 0)
-                {
-                    _player.Opacity = 0.33;
-                    _damageRecoveryOpacityFrameSkip = 5;
-                }
-                else
-                {
-                    _player.Opacity = 1;
-                }
-
-                _damageRecoveryCounter--;
-
-                if (_damageRecoveryCounter <= 0)
-                {
-                    _player.Opacity = 1;
-                    _isRecoveringFromDamage = false;
-                }
-            }
-
-            if (_isPowerMode && _powerUpType == PowerUpType.Rocket)
-            {
-                double left = _player.GetLeft();
-                double top = _player.GetTop();
-
-                double playerMiddleX = left + _player.Width / 2;
-                double playerMiddleY = top + _player.Height / 2;
-
-                if (_isPointerActivated)
-                {
-                    // move up
-                    if (_pointerPosition.Y < playerMiddleY - _gameSpeed)
-                        _player.SetTop(top - _gameSpeed);
-
-                    // move left
-                    if (_pointerPosition.X < playerMiddleX - _gameSpeed)
-                        _player.SetLeft(left - _gameSpeed);
-
-                    // move down
-                    if (_pointerPosition.Y > playerMiddleY + _gameSpeed)
-                        _player.SetTop(top + _gameSpeed * 2);
-
-                    // move right
-                    if (_pointerPosition.X > playerMiddleX + _gameSpeed)
-                        _player.SetLeft(left + _gameSpeed);
-                }
+                CloudRide();
             }
             else
             {
@@ -514,89 +608,17 @@ namespace CandyCrazeGame
                 {
                     case PlayerState.Idle:
                         {
-                            _player.SetTop(_player.GetTop() + _landedCloud.Speed);
-
-                            // only move the player with cloud when in view port
-                            if (_landedCloud.GetTop() + _landedCloud.Height > 10)
-                            {
-                                var inCloud = _landedCloud as Cloud;
-
-                                switch (inCloud.MovementDirectionX)
-                                {
-                                    case MovementDirectionX.Left:
-                                        _player.SetLeft(_player.GetLeft() - _landedCloud.Speed / (_cloudMovementDirectionXSpeedDivider * _scale));
-                                        break;
-                                    case MovementDirectionX.Right:
-                                        _player.SetLeft(_player.GetLeft() + _landedCloud.Speed / (_cloudMovementDirectionXSpeedDivider * _scale));
-                                        break;
-                                    default:
-                                        break;
-                                }
-                            }
-
-                            if (_playerHitBox.Top > _windowHeight / 4)
-                            {
-                                _fallingEaseDurationCounter = 0;
-                                _idleDurationCounter--;
-
-                                if (_idleDurationCounter <= 0)
-                                {
-                                    SoundHelper.PlaySound(SoundType.JUMP);
-                                    _player.SetState(PlayerState.Jumping);
-                                    _idleDurationCounter = _idleDurationCounterDefault;
-                                }
-                            }
-
+                            PlayerIdle();
                         }
                         break;
                     case PlayerState.Jumping:
                         {
-                            _jumpDurationCounter--;
-
-                            if (_playerHitBox.Top > 0)
-                                MovePlayerY(MovementDirectionY.Up);
-
-                            // move left
-                            if (_pointerPosition.X < _playerHitBox.Left)
-                                MovePlayerX(MovementDirectionX.Left);
-
-                            // move right
-                            if (_pointerPosition.X > _playerHitBox.Right)
-                                MovePlayerX(MovementDirectionX.Right);
-
-                            if (_jumpDurationCounter <= 0)
-                            {
-                                _jumpingEaseDurationCounter = _jumpEaseDurationCounterDefault;
-                                _jumpDurationCounter = _jumpDurationCounterDefault;
-                                _player.SetState(PlayerState.Falling);
-                            }
+                            PlayerJumping();
                         }
                         break;
                     case PlayerState.Falling:
                         {
-                            MovePlayerY(MovementDirectionY.Down);
-
-                            if (_pointerPosition.X < _playerHitBox.Left)
-                                MovePlayerX(MovementDirectionX.Left);
-
-                            if (_pointerPosition.X > _playerHitBox.Right)
-                                MovePlayerX(MovementDirectionX.Right);
-
-                            if (_playerHitBox.Top > _windowHeight)
-                            {
-                                //TODO: loose health
-                                LooseHealth(_playerHealthLossPoints);
-
-                                //TODO: animate health loss
-
-                                _fallingEaseDurationCounter = 0;
-                                _idleDurationCounter = _idleDurationCounterDefault;
-
-                                _player.SetState(PlayerState.Falling);
-                                _player.SetPosition(
-                                      left: GameView.Width / 2 - _player.Width / 2,
-                                      top: 0 + _player.Height / 2);
-                            }
+                            PlayerFalling();
                         }
                         break;
                     default:
@@ -605,26 +627,119 @@ namespace CandyCrazeGame
             }
         }
 
-        private void MovePlayerY(MovementDirectionY movementDirectionY)
+        private void PlayerIdle()
         {
-            switch (movementDirectionY)
-            {
-                case MovementDirectionY.Up:
-                    {
-                        if (_jumpingEaseDurationCounter > 0)
-                            _jumpingEaseDurationCounter -= 0.1;
+            _player.SetTop(_player.GetTop() + _player.LandedCloud.Speed);
 
-                        _player.SetTop(_player.GetTop() - ((_gameSpeed * 1.2) + _jumpingEaseDurationCounter));
-                    }
-                    break;
-                case MovementDirectionY.Down:
-                    {
-                        _fallingEaseDurationCounter += 0.1;
-                        _player.SetTop(_player.GetTop() + ((_gameSpeed * 1.2) + _fallingEaseDurationCounter));
-                    }
-                    break;
-                default:
-                    break;
+            // only move the player with cloud x axis when in view port
+            if (_player.LandedCloud.GetTop() + _player.LandedCloud.Height > 10)
+            {
+                var inCloud = _player.LandedCloud as Cloud;
+
+                switch (inCloud.MovementDirectionX)
+                {
+                    case MovementDirectionX.Left:
+                        _player.SetLeft(_player.GetLeft() - _player.LandedCloud.Speed / _cloudMovementDirectionXSpeedDivider);
+                        break;
+                    case MovementDirectionX.Right:
+                        _player.SetLeft(_player.GetLeft() + _player.LandedCloud.Speed / _cloudMovementDirectionXSpeedDivider);
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            // only initiate jump sequence after reaching a certain height
+            if (_playerHitBox.Top > _windowHeight / 4)
+            {
+                _fallingEaseCounter = _fallingEaseCounterDefault;
+                _idleDurationCounter--;
+
+                if (_idleDurationCounter <= 0)
+                {
+                    SoundHelper.PlaySound(SoundType.PLAYER_JUMP);
+                    _player.SetState(PlayerState.Jumping);
+                    _idleDurationCounter = _idleDurationCounterDefault;
+                }
+            }
+        }
+
+        private void PlayerJumping()
+        {
+            _jumpDurationCounter--;
+
+            // move up auto
+            if (_playerHitBox.Top > 0)
+                MovePlayerY(MovementDirectionY.Up);
+
+            // move left
+            if (_moveLeft || _pointerPosition.X < _playerHitBox.Left)
+                MovePlayerX(MovementDirectionX.Left);
+
+            // move right
+            if (_moveRight || _pointerPosition.X > _playerHitBox.Right)
+                MovePlayerX(MovementDirectionX.Right);
+
+            // if any cloud is detected which is up from the player and is not the landed and has a little distance from player
+            var nearbyCloudDetected = GameView.GetGameObjects<Cloud>().
+                Any(c => c.Uid != _player.LandedCloud.Uid
+                    && c.GetPlatformHitBox(_scale) is Rect cloudHitBox
+                    && cloudHitBox.Top < _playerPlatformHitBox.Top
+                    && cloudHitBox.IntersectsWith(_playerStandingHitBox));
+
+            // initiate falling sequence after staying airborne for a limited time or if a nearby cloud is detected
+            if (_jumpDurationCounter <= 0 || nearbyCloudDetected)
+            {
+                _jumpingEaseCounter = _jumpEaseCounterDefault;
+                _jumpDurationCounter = _jumpDurationCounterDefault;
+
+                _player.SetState(PlayerState.Falling);
+            }
+        }
+
+        private void PlayerFalling()
+        {
+            // move down auto
+            MovePlayerY(MovementDirectionY.Down);
+
+            // move left
+            if (_moveLeft || _pointerPosition.X < _playerHitBox.Left)
+                MovePlayerX(MovementDirectionX.Left);
+
+            // move right
+            if (_moveRight || _pointerPosition.X > _playerHitBox.Right)
+                MovePlayerX(MovementDirectionX.Right);
+
+            // loose health if player falls outside bottom of viewport
+            if (_playerHitBox.Top > _windowHeight)
+            {
+                if (!_isPlayerRecoveringFromDamage)
+                    LooseHealth();
+
+                ReSpawnPlayer();
+            }
+        }
+
+        private void DamageRecovering()
+        {
+            _damageRecoveryOpacityFrameSkip--;
+
+            if (_damageRecoveryOpacityFrameSkip < 0)
+            {
+                _player.Opacity = 0.33;
+                _damageRecoveryOpacityFrameSkip = 5;
+            }
+            else
+            {
+                _player.Opacity = 1;
+            }
+
+            _damageRecoveryCounter--;
+
+            if (_damageRecoveryCounter <= 0)
+            {
+                _player.Opacity = 1;
+                _isPlayerRecoveringFromDamage = false;
             }
         }
 
@@ -634,14 +749,37 @@ namespace CandyCrazeGame
             {
                 case MovementDirectionX.Left:
                     {
-                        _player.SetJumpDirection(MovementDirectionX.Left);
-                        _player.SetLeft(_player.GetLeft() - _gameSpeed * 1.2);
+                        _player.SetFacingDirectionX(MovementDirectionX.Left);
+                        _player.SetLeft(_player.GetLeft() - (_gameSpeed * _playerMovementSpeedMultiplier));
                     }
                     break;
                 case MovementDirectionX.Right:
                     {
-                        _player.SetJumpDirection(MovementDirectionX.Right);
-                        _player.SetLeft(_player.GetLeft() + _gameSpeed * 1.2);
+                        _player.SetFacingDirectionX(MovementDirectionX.Right);
+                        _player.SetLeft(_player.GetLeft() + (_gameSpeed * _playerMovementSpeedMultiplier));
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private void MovePlayerY(MovementDirectionY movementDirectionY)
+        {
+            switch (movementDirectionY)
+            {
+                case MovementDirectionY.Up:
+                    {
+                        if (_jumpingEaseCounter > 0)
+                            _jumpingEaseCounter -= 0.1;
+
+                        _player.SetTop(_player.GetTop() - ((_gameSpeed * _playerMovementSpeedMultiplier) + _jumpingEaseCounter));
+                    }
+                    break;
+                case MovementDirectionY.Down:
+                    {
+                        _fallingEaseCounter += 0.3;
+                        _player.SetTop(_player.GetTop() + ((_gameSpeed * _playerMovementSpeedMultiplier) + _fallingEaseCounter));
                     }
                     break;
                 default:
@@ -651,13 +789,71 @@ namespace CandyCrazeGame
 
         #endregion
 
+        #region Enemy
+
+        private void SpawnEnemy(Cloud cloud)
+        {
+            Enemy enemy = new(_scale);
+
+            _markNum = _random.Next(0, _enemies.Length);
+
+            enemy.EnemyMark = _markNum;
+            enemy.SetState(EnemyState.Idle);
+            enemy.PlaceOnCloud(cloud);
+
+            GameView.Children.Add(enemy);
+            _enemyCount++;
+        }
+
+        private void UpdateEnemy(Enemy enemy)
+        {
+            enemy.SetTop((enemy.LandedCloud.GetTop() + enemy.LandedCloud.Height / 2) - enemy.Height);
+            enemy.SetLeft((enemy.LandedCloud.GetLeft() + enemy.LandedCloud.Width / 2) - enemy.Width / 2);
+
+            var enemyHitBox = enemy.GetHitBox();
+            var enemyDistantHitHox = enemy.GetDistantHitBox();
+
+            // enable enemy attacking state if player is near
+            if (enemyDistantHitHox.IntersectsWith(_playerDistantHitBox))
+            {
+                if (enemy.EnemyState != EnemyState.Attacking)
+                    enemy.SetState(EnemyState.Attacking);
+            }
+            else
+            {
+                if (enemy.EnemyState != EnemyState.Idle)
+                    enemy.SetState(EnemyState.Idle);
+            }
+
+            if (_playerHitBox.Left < enemyHitBox.Left)
+                enemy.SetFacingDirectionX(MovementDirectionX.Left);
+
+            if (_playerHitBox.Right > enemyHitBox.Right)
+                enemy.SetFacingDirectionX(MovementDirectionX.Right);
+
+            // if player is not recovering from damage and hits an enemy then loose health and fall
+            if (!_isPlayerRecoveringFromDamage && enemyHitBox.IntersectsWith(_playerHitBox))
+            {
+                LooseHealth();
+
+                if (!_isPowerMode || _powerUpType != PowerUpType.CloudRide)
+                {
+                    _fallingEaseCounter = _fallingEaseCounterDefault;
+                    _idleDurationCounter = _idleDurationCounterDefault;
+
+                    _player.SetState(PlayerState.Falling);
+                }
+            }
+        }
+
+        #endregion
+
         #region Cloud
 
-        private void SpawnCloud()
+        private void SpawnCloud(int multiplierY = -1)
         {
             Cloud cloud = new(_scale);
-            RecyleCloud(cloud);
-
+            RecyleCloud(cloud: cloud, multiplierY: multiplierY);
             GameView.Children.Add(cloud);
             _cloudCount++;
         }
@@ -674,10 +870,10 @@ namespace CandyCrazeGame
                 switch (inCloud.MovementDirectionX)
                 {
                     case MovementDirectionX.Left:
-                        cloud.SetLeft(cloud.GetLeft() - cloud.Speed / (_cloudMovementDirectionXSpeedDivider * _scale));
+                        cloud.SetLeft(cloud.GetLeft() - cloud.Speed / _cloudMovementDirectionXSpeedDivider);
                         break;
                     case MovementDirectionX.Right:
-                        cloud.SetLeft(cloud.GetLeft() + cloud.Speed / (_cloudMovementDirectionXSpeedDivider * _scale));
+                        cloud.SetLeft(cloud.GetLeft() + cloud.Speed / _cloudMovementDirectionXSpeedDivider);
                         break;
                     default:
                         break;
@@ -686,41 +882,77 @@ namespace CandyCrazeGame
                 var cloudHitBox = cloud.GetPlatformHitBox(_scale);
 
                 // only land on a cloud when it's on a suitable height in viewport
-                if (_playerHitBox.Top > _windowHeight / 3)
+                if (_playerStandingHitBox.Top > _windowHeight / 5 && _player.PlayerState == PlayerState.Falling && _playerStandingHitBox.IntersectsWith(cloudHitBox))
                 {
-                    if (_player.PlayerState == PlayerState.Falling && _playerHitBox.IntersectsWith(cloudHitBox))
-                    {
-                        _landedCloud = cloud;
-                        _idleDurationCounter = _idleDurationCounterDefault;
-                        _player.SetState(PlayerState.Idle);
-                    }
+                    _player.LandedCloud = inCloud;
+
+                    _landedCloudEffectCounter = _landedCloudEffectCounterDefault;
+                    _landedCloudEffectActive = true;
+
+                    _idleDurationCounter = _idleDurationCounterDefault;
+                    _player.SetState(PlayerState.Idle);
                 }
 
                 if (cloud.GetTop() > GameView.Height)
-                {
                     RecyleCloud(cloud as Cloud);
-                    //GameView.AddDestroyableGameObject(cloud);
-                    //_cloudCount--;
-                }
             }
         }
 
-        private void RecyleCloud(Cloud cloud)
+        private void RecyleCloud(Cloud cloud, int multiplierY = -1)
         {
             _markNum = _random.Next(0, _clouds.Length);
             cloud.SetContent(_clouds[_markNum]);
 
-            cloud.Speed = (_gameSpeed * _cloudSpeedFactor) * _scale;
+            cloud.Speed = _gameSpeed * _cloudSpeedFactor;
             cloud.MovementDirectionX = (MovementDirectionX)_random.Next(0, Enum.GetNames<MovementDirectionX>().Length);
 
-            RandomizeCloudPosition(cloud);
+            // reposition standing enemy on this cloud if so found
+            if (GameView.GetGameObjects<Enemy>().FirstOrDefault(x => x.LandedCloud.Uid == cloud.Uid) is Enemy standingEnemy)
+                standingEnemy.PlaceOnCloud(cloud);
+
+            RandomizeCloudPosition(cloud: cloud, multiplierY: multiplierY);
         }
 
-        private void RandomizeCloudPosition(GameObject cloud)
+        private void RandomizeCloudPosition(GameObject cloud, int multiplierY = -1)
         {
             cloud.SetPosition(
                 left: _random.Next((int)(50 * _scale), (int)(GameView.Width - (50 * _scale))),
-                top: (int)GameView.Height * -1);
+                top: (GameView.Height / 4) * multiplierY);
+        }
+
+        private void LandedCloudEffect()
+        {
+            _landedCloudEffectCounter--;
+
+            if (_landedCloudEffectCounter > 0)
+            {
+                _player.LandedCloud.SetTop(_player.LandedCloud.GetTop() + _player.LandedCloud.Speed * 0.9);
+                _player.SetTop(_player.GetTop() + _player.LandedCloud.Speed * 0.9);
+            }
+
+            if (_landedCloudEffectCounter <= 0)
+            {
+                _landedCloudEffectActive = false;
+
+                _landedCloudEffectReverseCounter = _landedCloudEffectReverseCounterDefault;
+                _landedCloudEffectReverseActive = true;
+            }
+        }
+
+        private void LandedCloudEffectReverse()
+        {
+            _landedCloudEffectReverseCounter--;
+
+            if (_landedCloudEffectReverseCounter > 0)
+            {
+                _player.LandedCloud.SetTop(_player.LandedCloud.GetTop() - _player.LandedCloud.Speed * 0.9);
+                _player.SetTop(_player.GetTop() - _player.LandedCloud.Speed * 0.9);
+            }
+
+            if (_landedCloudEffectReverseCounter <= 0)
+            {
+                _landedCloudEffectReverseActive = false;
+            }
         }
 
         #endregion
@@ -739,17 +971,19 @@ namespace CandyCrazeGame
         {
             collectible.SetTop(collectible.GetTop() + _gameSpeed);
 
-            if (_playerHitBox.IntersectsWith(collectible.GetHitBox()))
-                Collectible(collectible);
-            else
+            // only consider player intersection after appearing in viewport
+            if (collectible.GetTop() + collectible.Height > 10)
             {
-                // if magnet power up received then pull collectibles to player
-                if (_isPowerMode && _powerUpType == PowerUpType.Magnet)
-                    MagnetPull(collectible);
+                if (_playerHitBox.IntersectsWith(collectible.GetHitBox()))
+                    Collectible(collectible);
 
-                if (collectible.GetTop() > GameView.Height)
-                    RecyleCollectible(collectible);
+                // if magnet power up received then pull collectibles to player
+                if (_isPowerMode && _powerUpType == PowerUpType.MagnetPull)
+                    MagnetPull(collectible);
             }
+
+            if (collectible.GetTop() > GameView.Height)
+                RecyleCollectible(collectible);
         }
 
         private void RecyleCollectible(GameObject collectible)
@@ -764,29 +998,6 @@ namespace CandyCrazeGame
             collectible.SetPosition(
                 left: _random.Next(0, (int)GameView.Width) - (100 * _scale),
                 top: _random.Next(100 * (int)_scale, (int)GameView.Height) * -1);
-        }
-
-        private void MagnetPull(GameObject collectible)
-        {
-            var playerHitBoxDistant = _player.GetDistantHitBox();
-            var collectibleHitBoxDistant = collectible.GetDistantHitBox();
-
-            if (playerHitBoxDistant.IntersectsWith(collectibleHitBoxDistant))
-            {
-                var collectibleHitBox = collectible.GetHitBox();
-
-                if (_playerHitBox.Left < collectibleHitBox.Left)
-                    collectible.SetLeft(collectible.GetLeft() - _gameSpeed * 1.5);
-
-                if (collectibleHitBox.Right < _playerHitBox.Left)
-                    collectible.SetLeft(collectible.GetLeft() + _gameSpeed * 1.5);
-
-                if (collectibleHitBox.Top > _playerHitBox.Bottom)
-                    collectible.SetTop(collectible.GetTop() - _gameSpeed * 1.5);
-
-                if (collectibleHitBox.Bottom < _playerHitBox.Top)
-                    collectible.SetTop(collectible.GetTop() + _gameSpeed * 1.5);
-            }
         }
 
         private void Collectible(GameObject collectible)
@@ -808,6 +1019,7 @@ namespace CandyCrazeGame
         {
             PowerUp powerUp = new(_scale);
 
+            //TODO: set to random powerup
             var powerUpTypes = Enum.GetNames<PowerUpType>();
             powerUp.PowerUpType = (PowerUpType)_random.Next(0, powerUpTypes.Length);
 
@@ -848,15 +1060,16 @@ namespace CandyCrazeGame
             _powerUpType = powerUp.PowerUpType;
 
             // if rocket power up received then change player to ufo
-            if (_powerUpType == PowerUpType.Rocket)
+            if (_powerUpType == PowerUpType.CloudRide)
             {
-                _fallingEaseDurationCounter = 0;
-                _jumpingEaseDurationCounter = _jumpEaseDurationCounterDefault;
+                _jumpDurationCounter = _jumpDurationCounterDefault;
+                _jumpingEaseCounter = _jumpEaseCounterDefault;
+                _fallingEaseCounter = _fallingEaseCounterDefault;
 
                 _player.SetState(PlayerState.Flying);
-                _player.SetScaleTransform(2);
+                _player.SetScaleTransform(_cloudFlightPlayerScaleModifier);
 
-                SoundHelper.PlaySound(SoundType.SPACESHIP_FLIGHT);
+                SoundHelper.PlaySound(SoundType.PLAYER_YAY);
             }
 
             powerUpText.Visibility = Visibility.Visible;
@@ -882,15 +1095,95 @@ namespace CandyCrazeGame
             _powerUpCount--;
 
             // if was in rocket mode set to falling mode
-            if (_powerUpType == PowerUpType.Rocket)
+            if (_powerUpType == PowerUpType.CloudRide)
             {
                 _player.SetScaleTransform(1);
                 _player.SetState(PlayerState.Falling);
-                SoundHelper.StopSound(SoundType.SPACESHIP_FLIGHT);
             }
 
             powerUpText.Visibility = Visibility.Collapsed;
             SoundHelper.PlaySound(SoundType.POWER_DOWN);
+        }
+
+        private void CloudRide()
+        {
+            double left = _player.GetLeft();
+            double top = _player.GetTop();
+
+            double playerMiddleX = left + _player.Width / 2;
+            double playerMiddleY = top + _player.Height / 2;
+
+            if (_isPointerActivated)
+            {
+                // move up
+                if (_pointerPosition.Y < playerMiddleY - _gameSpeed)
+                    _player.SetTop(top - _gameSpeed);
+
+                // move left
+                if (_pointerPosition.X < playerMiddleX - _gameSpeed)
+                {
+                    _player.SetLeft(left - _gameSpeed);
+                    _player.SetFacingDirectionX(MovementDirectionX.Left, _cloudFlightPlayerScaleModifier);
+                }
+
+                // move down
+                if (_pointerPosition.Y > playerMiddleY + _gameSpeed)
+                    _player.SetTop(top + _gameSpeed * 2);
+
+                // move right
+                if (_pointerPosition.X > playerMiddleX + _gameSpeed)
+                {
+                    _player.SetLeft(left + _gameSpeed);
+                    _player.SetFacingDirectionX(MovementDirectionX.Right, _cloudFlightPlayerScaleModifier);
+                }
+            }
+            else
+            {
+                // move up
+                if (_moveUp && top > 0 + (50 * _scale))
+                    _player.SetTop(top - _gameSpeed);
+
+                // move left
+                if (_moveLeft && left > 0)
+                {
+                    _player.SetLeft(left - _gameSpeed);
+                    _player.SetFacingDirectionX(MovementDirectionX.Left, _cloudFlightPlayerScaleModifier);
+                }
+
+                // move down
+                if (_moveDown && top < GameView.Height - (100 * _scale))
+                    _player.SetTop(top + _gameSpeed * 2);
+
+                // move right
+                if (_moveRight && left + _player.Width < GameView.Width)
+                {
+                    _player.SetLeft(left + _gameSpeed);
+                    _player.SetFacingDirectionX(MovementDirectionX.Right, _cloudFlightPlayerScaleModifier);
+                }
+            }
+        }
+
+        private void MagnetPull(GameObject collectible)
+        {
+            var playerHitBoxDistant = _player.GetDistantHitBox();
+            var collectibleHitBoxDistant = collectible.GetDistantHitBox();
+
+            if (playerHitBoxDistant.IntersectsWith(collectibleHitBoxDistant))
+            {
+                var collectibleHitBox = collectible.GetHitBox();
+
+                if (_playerHitBox.Left < collectibleHitBox.Left)
+                    collectible.SetLeft(collectible.GetLeft() - _gameSpeed * 1.5);
+
+                if (collectibleHitBox.Right < _playerHitBox.Left)
+                    collectible.SetLeft(collectible.GetLeft() + _gameSpeed * 1.5);
+
+                if (collectibleHitBox.Top > _playerHitBox.Bottom)
+                    collectible.SetTop(collectible.GetTop() - _gameSpeed * 1.5);
+
+                if (collectibleHitBox.Bottom < _playerHitBox.Top)
+                    collectible.SetTop(collectible.GetTop() + _gameSpeed * 1.5);
+            }
         }
 
         #endregion
@@ -908,14 +1201,14 @@ namespace CandyCrazeGame
             }
         }
 
-        private void LooseHealth(double health)
+        private void LooseHealth()
         {
             SoundHelper.PlaySound(SoundType.HEALTH_LOSS);
 
             _damageRecoveryCounter = _damageRecoveryDelay;
-            _isRecoveringFromDamage = true;
+            _isPlayerRecoveringFromDamage = true;
 
-            _playerHealth -= health;
+            _playerHealth -= _playerHealthLossPoints;
 
             if (_playerHealth <= 0)
                 GameOver();
@@ -941,14 +1234,15 @@ namespace CandyCrazeGame
         {
             if (_score > _scoreCap)
             {
-                _gameSpeed = _gameSpeedDefault + 0.2 * _difficultyMultiplier;
+                _gameSpeed = (_gameSpeedDefault * _scale) + 0.2 * _difficultyMultiplier;
                 _playerHealthLossPoints++;
-
-                if (_cloudSpawnCounterDefault > 40 / 3)
-                    _cloudSpawnCounterDefault -= 0.5;
-
-                _difficultyMultiplier++;
+                _difficultyMultiplier += 0.5;
                 _scoreCap += 50;
+
+#if DEBUG
+                Console.WriteLine($"GAME SPEED: {_gameSpeed}");
+                Console.WriteLine($"SCORE CAP: {_scoreCap}");
+#endif
             }
         }
 
@@ -988,9 +1282,11 @@ namespace CandyCrazeGame
                 _player.SetSize(
                     width: Constants.PLAYER_WIDTH * _scale,
                     height: Constants.PLAYER_HEIGHT * _scale);
-
-                _jumpDurationCounterDefault = _airborneDuration * _scale;
             }
+
+#if DEBUG
+            Console.WriteLine($"SCALE: {_scale}");
+#endif
         }
 
         private void NavigateToPage(Type pageType)
@@ -1001,7 +1297,7 @@ namespace CandyCrazeGame
 
         #endregion
 
-        #region In Game Message
+        #region InGameMessage
 
         private void ShowInGameTextMessage(string resourceKey)
         {

@@ -24,15 +24,23 @@ namespace CandyCrazeGame
 
         public PlayerState PlayerState { get; set; } = PlayerState.Idle;
 
+        public Cloud LandedCloud { get; set; }
+
         #endregion
 
         #region Methods
+
+        public void PlaceOnCloud(Cloud cloud)
+        {
+            LandedCloud = cloud;
+            this.PlaceRelativeToCloud(cloud);
+        }
 
         public void SetState(PlayerState playerState)
         {
             PlayerState = playerState;
 
-            switch (playerState)
+            switch (PlayerState)
             {
                 case PlayerState.Idle:
                     SetContent(Constants.ELEMENT_TEMPLATES.FirstOrDefault(x => x.Key is ElementType.PLAYER).Value);
@@ -51,15 +59,15 @@ namespace CandyCrazeGame
             }
         }
 
-        public void SetJumpDirection(MovementDirectionX jumpDirection)
+        public void SetFacingDirectionX(MovementDirectionX movementDirectionX, double scaleX = 1)
         {
-            switch (jumpDirection)
+            switch (movementDirectionX)
             {
                 case MovementDirectionX.Left:
-                    SetScaleX(-1);
+                    SetScaleX(scaleX * -1);
                     break;
                 case MovementDirectionX.Right:
-                    SetScaleX(1);
+                    SetScaleX(scaleX);
                     break;
                 default:
                     break;
