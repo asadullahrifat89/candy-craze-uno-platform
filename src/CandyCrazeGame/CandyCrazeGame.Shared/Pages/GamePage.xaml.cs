@@ -673,11 +673,11 @@ namespace CandyCrazeGame
                 MovePlayerY(MovementDirectionY.Up);
 
             // move left
-            if (_moveLeft || _pointerPosition.X < _playerHitBox.Left)
+            if (ShouldMoveleft())
                 MovePlayerX(MovementDirectionX.Left);
 
             // move right
-            if (_moveRight || _pointerPosition.X > _playerHitBox.Right)
+            if (ShouldMoveRight())
                 MovePlayerX(MovementDirectionX.Right);
 
             // if any cloud is detected which is up from the player and is not the landed and has a little distance from player
@@ -703,11 +703,11 @@ namespace CandyCrazeGame
             MovePlayerY(MovementDirectionY.Down);
 
             // move left
-            if (_moveLeft || _pointerPosition.X < _playerHitBox.Left)
+            if (ShouldMoveleft())
                 MovePlayerX(MovementDirectionX.Left);
 
             // move right
-            if (_moveRight || _pointerPosition.X > _playerHitBox.Right)
+            if (ShouldMoveRight())
                 MovePlayerX(MovementDirectionX.Right);
 
             // loose health if player falls outside bottom of viewport
@@ -719,6 +719,16 @@ namespace CandyCrazeGame
                 ReSpawnPlayer();
             }
         }
+
+        private bool ShouldMoveleft()
+        {
+            return _moveLeft || _isPointerActivated && _pointerPosition.X < _playerHitBox.Left;
+        }
+
+        private bool ShouldMoveRight()
+        {
+            return _moveRight || _isPointerActivated && _pointerPosition.X > _playerHitBox.Right;
+        }      
 
         private void DamageRecovering()
         {
