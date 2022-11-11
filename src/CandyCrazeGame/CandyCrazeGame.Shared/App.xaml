@@ -98,9 +98,6 @@
 
             <SolidColorBrush x:Key="GameBackgroundColor" Color="LightSkyBlue" />
 
-            <SolidColorBrush x:Key="WormBodyColor" Color="#f7b239" />
-            <SolidColorBrush x:Key="WormBorderColor" Color="#be1623" />
-
             <SolidColorBrush x:Key="GameBackgroundColor" Color="#b9e1ff" />
             <SolidColorBrush x:Key="SpotBackgroundColor1" Color="#80c8ff" />
             <SolidColorBrush x:Key="SpotBackgroundColor2" Color="#a6d9ff" />
