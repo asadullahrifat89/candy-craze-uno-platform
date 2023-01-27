@@ -29,13 +29,19 @@
     <Compile Include="$(MSBuildThisFileDirectory)Elements\Sound.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\GameObjectExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\HttpServiceExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\ObjectExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\PageExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\StringExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Helpers\AppSettingsHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Helpers\CompanyHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Helpers\PopUpHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Entities\Company.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Entities\GamePrizeOfTheDay.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Pages\GameOverPage.xaml.cs">
       <DependentUpon>GameOverPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="$(MSBuildThisFileDirectory)Pages\GamePage.xaml.cs">
-      <DependentUpon>GamePage.xaml</DependentUpon>
+    <Compile Include="$(MSBuildThisFileDirectory)Pages\GamePlayPage.xaml.cs">
+      <DependentUpon>GamePlayPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\AssetHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\AuthTokenHelper.cs" />
@@ -91,7 +97,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="$(MSBuildThisFileDirectory)Pages\GamePage.xaml">
+    <Page Include="$(MSBuildThisFileDirectory)Pages\GamePlayPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -128,6 +134,8 @@
 		 explicitly included in the projitem, so files can be added from vscode
 		 without manipulating the projitem file.
 	-->
+    <Content Include="$(MSBuildThisFileDirectory)appsettings.json" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Images\logo_brand.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Images\enemy1.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Images\enemy1_attack.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Images\enemy2.png" />
@@ -150,7 +158,6 @@
     <Content Include="$(MSBuildThisFileDirectory)Assets\Images\collectible5.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Images\collectible6.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Images\collectible7.png" />
-    <Content Include="$(MSBuildThisFileDirectory)Assets\Images\logo_brand.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Images\powerup1.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Images\powerup2.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Images\player_fly.png" />

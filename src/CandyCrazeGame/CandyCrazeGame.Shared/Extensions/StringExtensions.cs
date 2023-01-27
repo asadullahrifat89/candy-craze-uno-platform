@@ -114,5 +114,12 @@ namespace CandyCrazeGame
 
             return encodedData;
         }
+
+        public static string UnBitShift(this string text)
+        {
+            int shft = 5;
+            string decrypted = Encoding.UTF8.GetString(Convert.FromBase64String(text)).Select(ch => ch >> shft).Aggregate("", (current, val) => current + (char)(val / 2));
+            return decrypted;
+        }
     }
 }

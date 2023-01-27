@@ -1,7 +1,4 @@
-﻿using Microsoft.UI.Xaml;
-using System;
-
-namespace CandyCrazeGame.Wasm
+﻿namespace CandyCrazeGame.Wasm
 {
     public class Program
     {

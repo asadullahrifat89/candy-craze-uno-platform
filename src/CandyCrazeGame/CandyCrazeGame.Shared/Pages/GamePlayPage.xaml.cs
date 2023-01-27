@@ -4,14 +4,13 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using System;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Threading;
 using Windows.Foundation;
 using Windows.System;
 
 namespace CandyCrazeGame
 {
-    public sealed partial class GamePage : Page
+    public sealed partial class GamePlayPage : Page
     {
         #region Fields
 
@@ -117,7 +116,7 @@ namespace CandyCrazeGame
 
         #region Ctor
 
-        public GamePage()
+        public GamePlayPage()
         {
             InitializeComponent();
 
@@ -130,8 +129,8 @@ namespace CandyCrazeGame
             LoadGameElements();
             PopulateGameViews();
 
-            Loaded += GamePage_Loaded;
-            Unloaded += GamePage_Unloaded;
+            Loaded += GamePlayPage_Loaded;
+            Unloaded += GamePlayPage_Unloaded;
         }
 
         #endregion
@@ -140,18 +139,18 @@ namespace CandyCrazeGame
 
         #region Page
 
-        private void GamePage_Loaded(object sender, RoutedEventArgs e)
+        private void GamePlayPage_Loaded(object sender, RoutedEventArgs e)
         {
-            SizeChanged += GamePage_SizeChanged;
+            SizeChanged += GamePlayPage_SizeChanged;
         }
 
-        private void GamePage_Unloaded(object sender, RoutedEventArgs e)
+        private void GamePlayPage_Unloaded(object sender, RoutedEventArgs e)
         {
-            SizeChanged -= GamePage_SizeChanged;
+            SizeChanged -= GamePlayPage_SizeChanged;
             StopGame();
         }
 
-        private void GamePage_SizeChanged(object sender, SizeChangedEventArgs args)
+        private void GamePlayPage_SizeChanged(object sender, SizeChangedEventArgs args)
         {
             _windowWidth = args.NewSize.Width;
             _windowHeight = args.NewSize.Height;
