@@ -4,15 +4,15 @@
     "CultureValues": [
       {
         "Culture": "en",
-        "Value": "Candy Craze"
+        "Value": "SELISE Candy Craze"
       },
       {
         "Culture": "de",
-        "Value": "Candy Craze"
+        "Value": "SELISE Candy Craze"
       },
       {
         "Culture": "fr",
-        "Value": "Candy Craze"
+        "Value": "SELISE Candy Craze"
       }
     ]
   },
@@ -55,7 +55,7 @@
     "CultureValues": [
       {
         "Culture": "en",
-        "Value": "Deutsch"
+        "Value": "German"
       },
       {
         "Culture": "de",
@@ -63,7 +63,7 @@
       },
       {
         "Culture": "fr",
-        "Value": "Deutsch"
+        "Value": "Allemand"
       }
     ]
   },
@@ -72,15 +72,15 @@
     "CultureValues": [
       {
         "Culture": "en",
-        "Value": "A cute 😇 platform jumper on WebAssembly."
+        "Value": "Beat the high score and win the prize of the week!"
       },
       {
         "Culture": "de",
-        "Value": "Ein süßer 😇 Plattform-Jumper auf WebAssembly."
+        "Value": "Schlagt den High Score und gewinnt den Wochenpreis!"
       },
       {
         "Culture": "fr",
-        "Value": "Un joli pull plateforme 😇 sur WebAssembly."
+        "Value": "Battre le meilleure score et gagner le prix de la semaine!"
       }
     ]
   },
@@ -89,11 +89,11 @@
     "CultureValues": [
       {
         "Culture": "en",
-        "Value": "How To Play"
+        "Value": "How to play"
       },
       {
         "Culture": "de",
-        "Value": "Wie man spielt"
+        "Value": "So gehts"
       },
       {
         "Culture": "fr",
@@ -131,7 +131,7 @@
       },
       {
         "Culture": "fr",
-        "Value": "Tableau des leaders"
+        "Value": "Classement"
       }
     ]
   },
@@ -148,7 +148,7 @@
       },
       {
         "Culture": "fr",
-        "Value": "Connexion"
+        "Value": "Login"
       }
     ]
   },
@@ -165,7 +165,7 @@
       },
       {
         "Culture": "fr",
-        "Value": "Se Déconnecter"
+        "Value": "Se déconnecter"
       }
     ]
   },
@@ -178,11 +178,11 @@
       },
       {
         "Culture": "de",
-        "Value": "Du hast noch keinen Account?"
+        "Value": "Noch keinen Account?"
       },
       {
         "Culture": "fr",
-        "Value": "Tu n'as pas encore de compte?"
+        "Value": "Pas encore de compte?"
       }
     ]
   },
@@ -195,11 +195,11 @@
       },
       {
         "Culture": "de",
-        "Value": "Hergestellt mit ❤️ von"
+        "Value": "Kreiert mit ❤️ von"
       },
       {
         "Culture": "fr",
-        "Value": "Réalisé avec ❤️ par"
+        "Value": "Créé avec ❤️ par"
       }
     ]
   },
@@ -208,11 +208,11 @@
     "CultureValues": [
       {
         "Culture": "en",
-        "Value": "👋 Welcome Back!"
+        "Value": "👋 Welcome back!"
       },
       {
         "Culture": "de",
-        "Value": "👋 Willkommen Zurück!"
+        "Value": "👋 Willkommen zurück!"
       },
       {
         "Culture": "fr",
@@ -276,15 +276,15 @@
     "CultureValues": [
       {
         "Culture": "en",
-        "Value": "How To Play"
+        "Value": "How to play"
       },
       {
         "Culture": "de",
-        "Value": "Wie man spielt"
+        "Value": "So gehts"
       },
       {
         "Culture": "fr",
-        "Value": "Comment Jouer"
+        "Value": "Comment jouer"
       }
     ]
   },
@@ -314,11 +314,11 @@
       },
       {
         "Culture": "de",
-        "Value": "Steuere deine Sprung- und Fallrichtung, indem du den Mauszeiger über den Bildschirm bewegst."
+        "Value": "Steuerung der Sprung- und Fallrichtung, durch die Bewegung des Mauszeigers über den Bildschirm."
       },
       {
         "Culture": "fr",
-        "Value": "Contrôlez la direction de vos sauts et de vos chutes en déplaçant votre pointeur sur l'écran."
+        "Value": "Contrôle de la direction du saut et de la chute, en déplaçant le pointeur de la souris sur l'écran."
       }
     ]
   },
@@ -344,15 +344,15 @@
     "CultureValues": [
       {
         "Culture": "en",
-        "Value": "Avoid jumping into enemies and loosing health."
+        "Value": "Avoid jumping into enemies and loosing lives."
       },
       {
         "Culture": "de",
-        "Value": "Vermeide es, in Feinde zu springen und Gesundheit zu verlieren."
+        "Value": "Vermeide es, in Feinde zu springen und Leben zu verlieren."
       },
       {
         "Culture": "fr",
-        "Value": "Évitez de sauter sur les ennemis et de perdre de la santé."
+        "Value": "Évite de sauter sur les ennemis et de perdre des vies."
       }
     ]
   },
@@ -361,15 +361,15 @@
     "CultureValues": [
       {
         "Culture": "en",
-        "Value": "Health"
+        "Value": "Lives"
       },
       {
         "Culture": "de",
-        "Value": "Gesundheit"
+        "Value": "Leben"
       },
       {
         "Culture": "fr",
-        "Value": "Santé"
+        "Value": "Vies"
       }
     ]
   },
@@ -378,15 +378,15 @@
     "CultureValues": [
       {
         "Culture": "en",
-        "Value": "This is your health bar. You lose health if you fall out of the screen."
+        "Value": "This is your life bar. It depletes with time and when it runs out its game over."
       },
       {
         "Culture": "de",
-        "Value": "Dies ist dein Gesundheitsbalken. Sie verlieren Gesundheit, wenn Sie aus dem Bildschirm fallen."
+        "Value": "Dies ist Ihre Lebensleiste. Diese nimmt von Zeit zu Zeit mehr ab und wenn sie aufgebraucht ist, ist das Spiel vorbei."
       },
       {
         "Culture": "fr",
-        "Value": "C'est votre barre de santé. Vous perdez de la santé si vous tombez de l'écran."
+        "Value": "Il s'agit de votre barre de vie. Elle diminue de temps en temps et lorsqu'elle est épuisée, le jeu est terminé."
       }
     ]
   },
@@ -399,11 +399,11 @@
       },
       {
         "Culture": "de",
-        "Value": "Sammlerstücke"
+        "Value": "Sammelobjekte"
       },
       {
         "Culture": "fr",
-        "Value": "Pièces de collection"
+        "Value": "Objects de collection"
       }
     ]
   },
@@ -412,15 +412,15 @@
     "CultureValues": [
       {
         "Culture": "en",
-        "Value": "Collect these as much as you can to replenish health and earn points."
+        "Value": "Collect as many as you can to increase your score or lives."
       },
       {
         "Culture": "de",
-        "Value": "Sammle sie so oft wie möglich ein, um deine Gesundheit aufzufüllen und Punkte zu sammeln."
+        "Value": "So oft wie möglich einsammeln, um den Punktestand oder die Leben zu erhöhen."
       },
       {
         "Culture": "fr",
-        "Value": "Collectez-les autant que possible pour vous refaire une santé et gagner des points."
+        "Value": "Collecter le plus de fois possible pour augmenter le score ou les vies."
       }
     ]
   },
@@ -446,15 +446,15 @@
     "CultureValues": [
       {
         "Culture": "en",
-        "Value": "Collect these to activate magnet pull or cloud ride."
+        "Value": "Collect them to activate magnet pull or cloud ride."
       },
       {
         "Culture": "de",
-        "Value": "Sammle sie ein, um den Magnetzug oder die Wolkenfahrt zu aktivieren."
+        "Value": "Einsammeln, um den Magnet oder die Wolkenfahrt zu aktivieren."
       },
       {
         "Culture": "fr",
-        "Value": "Collectez-les pour activer l'attraction magnétique ou le tour de nuage."
+        "Value": "Collecter pour activer l'aimant ou le tour du nuage."
       }
     ]
   },
@@ -480,15 +480,15 @@
     "CultureValues": [
       {
         "Culture": "en",
-        "Value": "You could win an exciting prize if you login."
+        "Value": "Log in to take part in the draw."
       },
       {
         "Culture": "de",
-        "Value": "Sie können einen aufregenden Preis gewinnen, wenn Sie sich anmelden."
+        "Value": "Loggen Sie sich ein, um an der Verlosung teilzunehmen."
       },
       {
         "Culture": "fr",
-        "Value": "Vous pourriez gagner un prix passionnant si vous vous connectez."
+        "Value": "Connectez-vous pour participer au tirage au sort."
       }
     ]
   },
@@ -514,7 +514,7 @@
     "CultureValues": [
       {
         "Culture": "en",
-        "Value": "Your Score"
+        "Value": "Your score"
       },
       {
         "Culture": "de",
@@ -539,7 +539,7 @@
       },
       {
         "Culture": "fr",
-        "Value": "Pièces de collection"
+        "Value": "Objets de collection"
       }
     ]
   },
@@ -595,6 +595,23 @@
     ]
   },
   {
+    "Key": "UserCityBox",
+    "CultureValues": [
+      {
+        "Culture": "en",
+        "Value": "City"
+      },
+      {
+        "Culture": "de",
+        "Value": "Stadt"
+      },
+      {
+        "Culture": "fr",
+        "Value": "Ville"
+      }
+    ]
+  },
+  {
     "Key": "UserEmailBox",
     "CultureValues": [
       {
@@ -607,12 +624,29 @@
       },
       {
         "Culture": "fr",
-        "Value": "Adresse e-mail"
+        "Value": "Adresse mail"
       }
     ]
   },
   {
     "Key": "UserNameBox",
+    "CultureValues": [
+      {
+        "Culture": "en",
+        "Value": "Username"
+      },
+      {
+        "Culture": "de",
+        "Value": "Benutzername"
+      },
+      {
+        "Culture": "fr",
+        "Value": "Nom d'utilisateur"
+      }
+    ]
+  },
+  {
+    "Key": "UserNameEmailBox",
     "CultureValues": [
       {
         "Culture": "en",
@@ -684,15 +718,15 @@
     "CultureValues": [
       {
         "Culture": "en",
-        "Value": "Yes, I would like to subscribe to newsletters."
+        "Value": "Yes, I would like to receive the newsletter and benefit from promotions."
       },
       {
         "Culture": "de",
-        "Value": "Ja, ich möchte den Newsletter abonnieren."
+        "Value": "Ja, ich möchte den Newsletter abonnieren und von Aktionen profitieren."
       },
       {
         "Culture": "fr",
-        "Value": "Oui, je voudrais souscrire aux newsletters."
+        "Value": "Oui, je souhaite m'abonner à la newsletter et profiter des promotions."
       }
     ]
   },
@@ -722,11 +756,11 @@
       },
       {
         "Culture": "de",
-        "Value": "Du hast bereits einen Account?"
+        "Value": "Sie haben bereits einen Account?"
       },
       {
         "Culture": "fr",
-        "Value": "Tu as déjà un compte ??"
+        "Value": "Vous avez déjà un compte?"
       }
     ]
   },
@@ -803,15 +837,15 @@
     "CultureValues": [
       {
         "Culture": "en",
-        "Value": "Personal Best Score"
+        "Value": "Personal best score"
       },
       {
         "Culture": "de",
-        "Value": "Persönliche Beste Punktzahl"
+        "Value": "Persönliche Bestpunktzahl"
       },
       {
         "Culture": "fr",
-        "Value": "Meilleur Score Personnel"
+        "Value": "Meilleur score personnel"
       }
     ]
   },
@@ -995,7 +1029,7 @@
       },
       {
         "Culture": "de",
-        "Value": "Das Passwort muss einen Kleinbuchstabencharakter enthalten"
+        "Value": "Das Passwort muss einen Kleinbuchstaben enthalten"
       },
       {
         "Culture": "fr",
@@ -1102,6 +1136,91 @@
       {
         "Culture": "fr",
         "Value": "JEU PAUSÉ"
+      }
+    ]
+  },
+  {
+    "Key": "SeasonToggle",
+    "CultureValues": [
+      {
+        "Culture": "en",
+        "Value": "💫 Season"
+      },
+      {
+        "Culture": "de",
+        "Value": "💫 Saison"
+      },
+      {
+        "Culture": "fr",
+        "Value": "💫 Saison"
+      }
+    ]
+  },
+  {
+    "Key": "DailyPrize_Tagline",
+    "CultureValues": [
+      {
+        "Culture": "en",
+        "Value": "🎁 Weekly prize 🎁"
+      },
+      {
+        "Culture": "de",
+        "Value": "🎁 Wöchentlicher Preis 🎁"
+      },
+      {
+        "Culture": "fr",
+        "Value": "🎁 Prix de la semaine 🎁"
+      }
+    ]
+  },
+  {
+    "Key": "ViewPrizeButton",
+    "CultureValues": [
+      {
+        "Culture": "en",
+        "Value": "🎁 View Prize 🎁"
+      },
+      {
+        "Culture": "de",
+        "Value": "🎁 Preis ansehen 🎁"
+      },
+      {
+        "Culture": "fr",
+        "Value": "🎁 Voir le prix 🎁"
+      }
+    ]
+  },
+  {
+    "Key": "TermsAndConditionsButton",
+    "CultureValues": [
+      {
+        "Culture": "en",
+        "Value": "Conditions of participation"
+      },
+      {
+        "Culture": "de",
+        "Value": "Teilnahmebedingungen"
+      },
+      {
+        "Culture": "fr",
+        "Value": "Conditions de participation"
+      }
+    ]
+  },
+  {
+    "Key": "LOGIN_PROMPT",
+    "CultureValues": [
+      {
+        "Culture": "en",
+        "Value": "Sign up for a chance to win."
+      },
+      {
+        "Culture": "de",
+        "Value": "Melde dich an, um eine Chance auf den Gewinn zu haben."
+      },
+      {
+        "Culture": "fr",
+        "Value": "Inscris-toi pour avoir une chance de gagner."
       }
     ]
   }

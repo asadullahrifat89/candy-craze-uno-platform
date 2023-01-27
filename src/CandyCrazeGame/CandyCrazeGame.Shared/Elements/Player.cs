@@ -1,6 +1,4 @@
-﻿using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Media;
-using System.Linq;
+﻿using System.Linq;
 
 namespace CandyCrazeGame
 {

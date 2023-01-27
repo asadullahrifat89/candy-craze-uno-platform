@@ -8,6 +8,7 @@ using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using Uno.Extensions;
 using System.Threading;
+using Microsoft.UI.Xaml.Controls.Primitives;
 
 namespace CandyCrazeGame
 {
@@ -77,21 +78,21 @@ namespace CandyCrazeGame
             if (await GetGameProfile())
                 ShowUserName();
 
-            DailyScoreboardToggle.IsChecked = true;
+            SeasonToggle.IsChecked = true;
 
             this.StopProgressBar();
 
-            SizeChanged += GamePage_SizeChanged;
+            SizeChanged += GamePlayPage_SizeChanged;
             StartAnimation();
         }
 
         private void LeaderboardPage_Unloaded(object sender, RoutedEventArgs e)
         {
-            SizeChanged -= GamePage_SizeChanged;
+            SizeChanged -= GamePlayPage_SizeChanged;
             StopAnimation();
         }
 
-        private void GamePage_SizeChanged(object sender, SizeChangedEventArgs args)
+        private void GamePlayPage_SizeChanged(object sender, SizeChangedEventArgs args)
         {
             _windowWidth = args.NewSize.Width;
             _windowHeight = args.NewSize.Height;
@@ -107,9 +108,23 @@ namespace CandyCrazeGame
 
         #region Buttons
 
-        private void PlayAgainButton_Click(object sender, RoutedEventArgs e)
+        private async void PlayAgainButton_Click(object sender, RoutedEventArgs e)
         {
-            NavigateToPage(typeof(GamePage));
+            if (GameProfileHelper.HasUserLoggedIn() ? await GenerateSession() : true)
+                NavigateToPage(typeof(GamePlayPage));
+        }
+
+        private async void SeasonToggle_Click(object sender, RoutedEventArgs e)
+        {
+            SoundHelper.PlaySound(SoundType.MENU_SELECT);
+
+            this.RunProgressBar();
+
+            UncheckScoreboardChoiceToggles(sender);
+
+            await GetGameSeason();
+
+            this.StopProgressBar();
         }
 
         private async void AllTimeScoreboardToggle_Click(object sender, RoutedEventArgs e)
@@ -118,7 +133,8 @@ namespace CandyCrazeGame
 
             this.RunProgressBar();
 
-            DailyScoreboardToggle.IsChecked = false;
+            UncheckScoreboardChoiceToggles(sender);
+
             await GetGameProfiles();
 
             this.StopProgressBar();
@@ -130,7 +146,8 @@ namespace CandyCrazeGame
 
             this.RunProgressBar();
 
-            AllTimeScoreboardToggle.IsChecked = false;
+            UncheckScoreboardChoiceToggles(sender);
+
             await GetGameScores();
 
             this.StopProgressBar();
@@ -148,6 +165,20 @@ namespace CandyCrazeGame
         #region Methods
 
         #region Logic
+
+        private async Task<bool> GenerateSession()
+        {
+            (bool IsSuccess, string Message) = await _backendService.GenerateUserSession();
+
+            if (!IsSuccess)
+            {
+                var error = Message;
+                this.ShowError(error);
+                return false;
+            }
+
+            return true;
+        }
 
         private async Task<bool> GetGameProfile()
         {
@@ -176,6 +207,7 @@ namespace CandyCrazeGame
 
             if (!IsSuccess)
             {
+                SetListViewMessage();
                 var error = Message;
                 this.ShowError(error);
                 return false;
@@ -205,6 +237,7 @@ namespace CandyCrazeGame
 
             if (!IsSuccess)
             {
+                SetListViewMessage();
                 var error = Message;
                 this.ShowError(error);
                 return false;
@@ -220,6 +253,65 @@ namespace CandyCrazeGame
             else
             {
                 SetListViewMessage(LocalizationHelper.GetLocalizedResource("NO_DATA_AVAILABLE"));
+            }
+
+            return true;
+        }
+
+        private async Task<bool> GetGameSeason()
+        {
+            SetListViewMessage(LocalizationHelper.GetLocalizedResource("LOADING_DATA"));
+
+            (bool IsSuccess, string Message, Season Season) = await _backendService.GetGameSeason();
+
+            if (!IsSuccess)
+            {
+                SetListViewMessage();
+                var error = Message;
+                this.ShowError(error);
+                return false;
+            }
+
+            if (Season is not null && Season.PrizeDescriptions is not null && Season.PrizeDescriptions.Length > 0)
+            {
+                SetListViewMessage();
+                SeasonPrizeDescriptionText.Text = Season.PrizeDescriptions.FirstOrDefault(x => x.Culture == LocalizationHelper.CurrentCulture).Value;
+                await GetGamePrize();
+            }
+            else
+            {
+                SeasonPrizeContainer.Visibility = Visibility.Collapsed;
+                SetListViewMessage(LocalizationHelper.GetLocalizedResource("NO_DATA_AVAILABLE"));
+            }
+
+            return true;
+        }
+
+        private async Task<bool> GetGamePrize()
+        {
+            (bool IsSuccess, string Message, GamePrizeOfTheDay GamePrize) = await _backendService.GetGameDailyPrize();
+
+            if (!IsSuccess)
+            {
+                var error = Message;
+                this.ShowError(error);
+                return false;
+            }
+
+            if (GamePrize is not null
+                && GamePrize.WinningCriteria is not null
+                && GamePrize.WinningCriteria.CriteriaDescriptions is not null
+                && GamePrize.PrizeDescriptions is not null
+                && GamePrize.WinningCriteria.CriteriaDescriptions.Length > 0
+                && GamePrize.PrizeDescriptions.Length > 0)
+            {
+                SetListViewMessage();
+                WinningCriteriaDescriptionText.Text = GamePrize.WinningCriteria.CriteriaDescriptions.FirstOrDefault(x => x.Culture == LocalizationHelper.CurrentCulture).Value;
+                GamePrizeDescriptionText.Text = GamePrize.PrizeDescriptions.FirstOrDefault(x => x.Culture == LocalizationHelper.CurrentCulture).Value;
+            }
+            else
+            {
+                DailyPrizeContainer.Visibility = Visibility.Collapsed;
             }
 
             return true;
@@ -258,7 +350,7 @@ namespace CandyCrazeGame
         {
             if (leaderboardPlacements is not null)
             {
-                if (leaderboardPlacements.FirstOrDefault(x => x.User.UserName == GameProfileHelper.GameProfile.User.UserName || x.User.UserEmail == GameProfileHelper.GameProfile.User.UserEmail) is LeaderboardPlacement placement)
+                if (leaderboardPlacements.FirstOrDefault(x => x.User.UserId == GameProfileHelper.GameProfile.User.UserId) is LeaderboardPlacement placement)
                 {
                     placement.Emoji = "👨‍🚀";
                 }
@@ -309,11 +401,19 @@ namespace CandyCrazeGame
 
         private void NavigateToPage(Type pageType)
         {
-            if (pageType == typeof(GamePage))
+            if (pageType == typeof(GamePlayPage))
                 SoundHelper.StopSound(SoundType.INTRO);
 
             SoundHelper.PlaySound(SoundType.MENU_SELECT);
             App.NavigateToPage(pageType);
+        }
+
+        private void UncheckScoreboardChoiceToggles(object sender)
+        {
+            foreach (var toggleButton in ScoreboardChoice.Children.OfType<ToggleButton>().Where(x => x.Name != ((ToggleButton)sender).Name))
+            {
+                toggleButton.IsChecked = false;
+            }
         }
 
         #endregion

@@ -56,11 +56,11 @@ namespace CandyCrazeGame
 
         #region Page
 
-        private void LoginPage_Loaded(object sender, RoutedEventArgs e)
+        private async void LoginPage_Loaded(object sender, RoutedEventArgs e)
         {
             this.SetLocalization();
 
-            SizeChanged += GamePage_SizeChanged;
+            SizeChanged += GamePlayPage_SizeChanged;
             StartAnimation();
 
             // if user was already logged in or came here after sign up
@@ -68,23 +68,25 @@ namespace CandyCrazeGame
                 && !authCredentials.UserName.IsNullOrBlank()
                 && !authCredentials.Password.IsNullOrBlank())
             {
-                UserNameBox.Text = authCredentials.UserName;
+                UserNameEmailBox.Text = authCredentials.UserName;
                 PasswordBox.Text = authCredentials.Password;
             }
             else
             {
-                UserNameBox.Text = null;
+                UserNameEmailBox.Text = null;
                 PasswordBox.Text = null;
             }
+
+            await GetCompanyBrand();
         }
 
         private void LoginPage_Unloaded(object sender, RoutedEventArgs e)
         {
-            SizeChanged -= GamePage_SizeChanged;
+            SizeChanged -= GamePlayPage_SizeChanged;
             StopAnimation();
         }
 
-        private void GamePage_SizeChanged(object sender, SizeChangedEventArgs args)
+        private void GamePlayPage_SizeChanged(object sender, SizeChangedEventArgs args)
         {
             _windowWidth = args.NewSize.Width;
             _windowHeight = args.NewSize.Height;
@@ -106,7 +108,7 @@ namespace CandyCrazeGame
         }
 
         private void RegisterButton_Click(object sender, RoutedEventArgs e)
-        {            
+        {
             NavigateToPage(typeof(SignUpPage));
         }
 
@@ -144,20 +146,60 @@ namespace CandyCrazeGame
 
         #region Logic
 
+        private async Task<bool> GetCompanyBrand()
+        {
+            // if company is not already fetched, fetch it
+            if (CompanyHelper.Company is null)
+            {
+                (bool IsSuccess, string Message, Company Company) = await _backendService.GetCompanyBrand();
+
+                if (!IsSuccess)
+                {
+                    var error = Message;
+                    this.ShowError(error);
+                    return false;
+                }
+
+                if (Company is not null && !Company.WebSiteUrl.IsNullOrBlank())
+                {
+                    CompanyHelper.Company = Company;
+                }
+            }
+
+            if (CompanyHelper.Company is not null)
+                BrandButton.NavigateUri = new Uri(CompanyHelper.Company.WebSiteUrl);
+
+            return true;
+        }
+
+        private async Task<bool> GenerateSession()
+        {
+            (bool IsSuccess, string Message) = await _backendService.GenerateUserSession();
+
+            if (!IsSuccess)
+            {
+                var error = Message;
+                this.ShowError(error);
+                return false;
+            }
+
+            return true;
+        }
+
         private async Task PerformLogin()
         {
             this.RunProgressBar();
 
-            if (await Authenticate() && await GetGameProfile() && await GenerateSession())
+            if (await Authenticate() && await GetGameProfile())
             {
                 if (PlayerScoreHelper.GameScoreSubmissionPending)
                 {
-                    if (await SubmitScore())
+                    if (await GenerateSession() && await SubmitScore())
                         PlayerScoreHelper.GameScoreSubmissionPending = false;
                 }
 
                 this.StopProgressBar();
-               
+
                 NavigateToPage(typeof(LeaderboardPage));
             }
         }
@@ -165,7 +207,7 @@ namespace CandyCrazeGame
         private async Task<bool> Authenticate()
         {
             (bool IsSuccess, string Message) = await _backendService.AuthenticateUser(
-                userNameOrEmail: UserNameBox.Text.Trim(),
+                userNameOrEmail: UserNameEmailBox.Text.Trim(),
                 password: PasswordBox.Text.Trim());
 
             if (!IsSuccess)
@@ -192,9 +234,9 @@ namespace CandyCrazeGame
             return true;
         }
 
-        private async Task<bool> GenerateSession()
+        private async Task<bool> SubmitScore()
         {
-            (bool IsSuccess, string Message) = await _backendService.GenerateUserSession();
+            (bool IsSuccess, string Message, GamePlayResult GamePlayResult) = await _backendService.SubmitUserGameScore(PlayerScoreHelper.PlayerScore.Score);
 
             if (!IsSuccess)
             {
@@ -202,27 +244,21 @@ namespace CandyCrazeGame
                 this.ShowError(error);
                 return false;
             }
+
+            ShowGamePlayResult(GamePlayResult);
 
             return true;
         }
 
-        private async Task<bool> SubmitScore()
+        private void ShowGamePlayResult(GamePlayResult GamePlayResult)
         {
-            (bool IsSuccess, string Message) = await _backendService.SubmitUserGameScore(PlayerScoreHelper.PlayerScore.Score);
-
-            if (!IsSuccess)
-            {
-                var error = Message;
-                this.ShowError(error);
-                return false;
-            }
-
-            return true;
+            if (GamePlayResult is not null && !GamePlayResult.PrizeName.IsNullOrBlank())
+                PopUpHelper.ShowGamePlayResultPopUp(GamePlayResult);
         }
 
         private void EnableLoginButton()
         {
-            LoginButton.IsEnabled = !UserNameBox.Text.IsNullOrBlank() && !PasswordBox.Text.IsNullOrBlank();
+            LoginButton.IsEnabled = !UserNameEmailBox.Text.IsNullOrBlank() && !PasswordBox.Text.IsNullOrBlank();
         }
 
         #endregion

@@ -1,6 +1,4 @@
-﻿using System.Linq;
-
-namespace CandyCrazeGame
+﻿namespace CandyCrazeGame
 {
     public class PowerUp : GameObject
     {
